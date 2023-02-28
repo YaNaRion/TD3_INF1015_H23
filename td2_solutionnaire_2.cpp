@@ -15,6 +15,7 @@
 #include "cppitertools/range.hpp"
 #include "gsl/span"
 #include "debogage_memoire.hpp"        // Ajout des numéros de ligne des "new" dans le rapport de fuites.  Doit être après les include du système, qui peuvent utiliser des "placement new" (non supporté par notre ajout de numéros de lignes).
+#include <sstream>
 using namespace iter;
 using namespace gsl;
 
@@ -177,22 +178,23 @@ ListeFilms::~ListeFilms()
 }
 //]
 
-void afficherActeur(const Acteur& acteur)
-{
-	cout << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
+
+ostream& operator<<(ostream& o, const Acteur& acteur) {
+	return o << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
 }
 
-void afficherFilm(const Film& film)
-{
-	cout << "Titre: " << film.titre << endl;
-	cout << "  Réalisateur: " << film.realisateur << "  Année :" << film.anneeSortie << endl;
-	cout << "  Recette: " << film.recette << "M$" << endl;
-
-	cout << "Acteurs:" << endl;
-	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.acteurs))
-		afficherActeur(*acteur);
-}
 //]
+ostream& operator<< (ostream& o, const Film& film) {
+	o << "Titre: " << film.titre << endl;
+	o << "  Réalisateur: " << film.realisateur << "  Année :" << film.anneeSortie << endl;
+	o << "  Recette: " << film.recette << "M$" << endl;
+
+	o << "Acteurs:" << endl;
+	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.acteurs))
+		o<< *acteur;
+	return o;
+}
+
 
 void afficherListeFilms(const ListeFilms& listeFilms)
 {
@@ -204,7 +206,7 @@ void afficherListeFilms(const ListeFilms& listeFilms)
 
 	for (const Film* film : listeFilms.enSpan()) {
 
-		afficherFilm(*film);
+		cout << *film;
 
 		cout << ligneDeSeparation;
 	}
@@ -230,13 +232,12 @@ int main()
 
 	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
 
-
 	ListeFilms listeFilms("films.bin");
 	
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 	
-	afficherFilm(*listeFilms.enSpan()[0]);
-	
+	//afficherFilm(*listeFilms.enSpan()[0]);
+	cout << *listeFilms.enSpan()[0];
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 	
@@ -247,6 +248,12 @@ int main()
 	cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
 	
 	//afficherFilmographieActeur(listeFilms, "Benedict Cumberbatch");
+
+
+	Film skylien = listeFilms.enSpan()[0];
+
+
+
 	
 	detruireFilm(listeFilms.enSpan()[0]);
 	listeFilms.enleverFilm(listeFilms.enSpan()[0]);
@@ -255,5 +262,11 @@ int main()
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
 
 	afficherListeFilms(listeFilms);
+
+//	ostringstream tamponStringStream;
+//	tamponStringStream << *listeFilms.enSpan()[0];
+//	string filmEnString = tamponStringStream.str();
+//	ofstream fichier("unfilm.txt");
+//	fichier << *listeFilms.enSpan()[0];
 
 }
