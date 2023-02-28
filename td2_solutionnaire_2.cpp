@@ -117,7 +117,6 @@ shared_ptr<Acteur> lireActeur(istream& fichier
 		return make_shared<Acteur>(acteur);
 	}
 
-	return {};
 }
 
 Film* lireFilm(istream& fichier
@@ -142,7 +141,6 @@ Film* lireFilm(istream& fichier
 
 	return film;
 
-	return {}; 
 }
 
 ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true)
