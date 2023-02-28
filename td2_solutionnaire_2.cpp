@@ -116,6 +116,8 @@ shared_ptr<Acteur> lireActeur(istream& fichier
 		cout << "Création Acteur " << acteur.nom << endl;
 		return make_shared<Acteur>(acteur);
 	}
+
+	return {};
 }
 
 Film* lireFilm(istream& fichier
