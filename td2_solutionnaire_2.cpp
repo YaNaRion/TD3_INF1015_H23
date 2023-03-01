@@ -281,8 +281,8 @@ int main()
 
 	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
 	
-	detruireFilm(listeFilms.enSpan()[0]);
-	listeFilms.enleverFilm(listeFilms.enSpan()[0]);
+	detruireFilm(spanListeFilm[0]);
+	listeFilms.enleverFilm(spanListeFilm[0]);
 
 
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
