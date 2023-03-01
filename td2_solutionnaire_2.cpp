@@ -118,7 +118,6 @@ shared_ptr<Acteur> lireActeur(istream& fichier
 		return make_shared<Acteur>(acteur);
 	}
 
-	return {};
 }
 
 Film* lireFilm(istream& fichier
@@ -140,6 +139,7 @@ Film* lireFilm(istream& fichier
 
 
 	}
+
 	return film;
 
 }
@@ -195,7 +195,6 @@ ostream& operator<< (ostream& o, const Film& film) {
 	return o;
 }
 
-
 void afficherListeFilms(const ListeFilms& listeFilms)
 {
 
@@ -211,6 +210,8 @@ void afficherListeFilms(const ListeFilms& listeFilms)
 		cout << ligneDeSeparation;
 	}
 }
+
+
 /*
 void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
 {
@@ -222,6 +223,28 @@ void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomA
 		afficherListeFilms(acteur->joueDans);
 }
 */
+
+Film::Film() {
+	std::string titre = "PasDeTitre", realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
+	int anneeSortie = 0, recette = 0;
+	ListeActeurs acteurs = {};
+}
+Film::Film(const Film& autreFilm) :
+	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
+	acteurs.elements = {};
+	*this = autreFilm;
+}
+Film& Film::operator= (const Film& autre) {
+	for (int i : range(autre.acteurs.nElements)) {
+		cout << "dans la creation";
+//		acteurs.elements[i] = autre.acteurs.elements[i]; // cette ligne. this one officer
+		
+	}
+	
+	return *this;
+}
+
+
 int main()
 {
 	#ifdef VERIFICATION_ALLOCATION_INCLUS
@@ -235,7 +258,7 @@ int main()
 	ListeFilms listeFilms("films.bin");
 	
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
-	
+
 	//afficherFilm(*listeFilms.enSpan()[0]);
 	cout << *listeFilms.enSpan()[0];
 
@@ -250,8 +273,7 @@ int main()
 	//afficherFilmographieActeur(listeFilms, "Benedict Cumberbatch");
 
 
-	Film skylien = listeFilms.enSpan()[0];
-
+	Film skylien = *listeFilms.enSpan()[0];
 
 
 	

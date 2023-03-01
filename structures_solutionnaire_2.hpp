@@ -33,13 +33,17 @@ private:
 struct ListeActeurs {
 	int capacite, nElements;
 	unique_ptr<shared_ptr<Acteur>[]> elements; // Pointeur vers un tableau de Acteur*, chaque Acteur* pointant vers un Acteur.
+
 };
 
 struct Film
 {
+	Film();
 	std::string titre = "PasDeTitre", realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
 	ListeActeurs acteurs = {};
+	Film(const Film& autreFilm);
+	Film& operator= (const Film& autre);
 };
 
 struct Acteur
