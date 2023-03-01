@@ -244,6 +244,17 @@ Film& Film::operator= (const Film& autre) {
 	return *this;
 }
 
+template<typename T>
+Film* ListeFilms::trouverFilmCritere(T valeur) {
+	auto trouverfilm = [](T valeur) -> Film* {
+		for (int film :enSpan()) {
+			if (typeid(T).name ==  )
+		}
+
+		return;
+	};
+}
+
 
 int main()
 {
