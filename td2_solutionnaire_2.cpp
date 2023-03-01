@@ -231,16 +231,16 @@ Film::Film() {
 }
 Film::Film(const Film& autreFilm) :
 	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
-	acteurs.elements = {};
+	acteurs.nElements = autreFilm.acteurs.nElements;
+	acteurs.capacite = autreFilm.acteurs.capacite;
+	acteurs.elements = make_unique<shared_ptr<Acteur>[]>(acteurs.nElements);
+
 	*this = autreFilm;
 }
 Film& Film::operator= (const Film& autre) {
-	for (int i : range(autre.acteurs.nElements)) {
-		cout << "dans la creation";
-//		acteurs.elements[i] = autre.acteurs.elements[i]; // cette ligne. this one officer
-		
+	for (int i : range(acteurs.nElements)) {
+		acteurs.elements[i] = autre.acteurs.elements[i];
 	}
-	
 	return *this;
 }
 
@@ -260,7 +260,8 @@ int main()
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 
 	//afficherFilm(*listeFilms.enSpan()[0]);
-	cout << *listeFilms.enSpan()[0];
+	span<Film*> spanListeFilm = listeFilms.enSpan();
+	cout << *spanListeFilm[0];
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 	
@@ -274,8 +275,11 @@ int main()
 
 
 	Film skylien = *listeFilms.enSpan()[0];
+	skylien.titre = "Skylien";
+	skylien.acteurs.elements[0] = spanListeFilm[1]->acteurs.elements[0];
+	skylien.acteurs.elements[0]->nom = "Daniel Wroughton Craig";
 
-
+	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
 	
 	detruireFilm(listeFilms.enSpan()[0]);
 	listeFilms.enleverFilm(listeFilms.enSpan()[0]);
