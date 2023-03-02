@@ -244,7 +244,7 @@ Film& Film::operator= (const Film& autre) {
 	return *this;
 }
 
-template<typename T>
+/*template<typename T>
 Film* ListeFilms::trouverFilmCritere(T valeur) {
 	auto trouverfilm = [](T valeur) -> Film* {
 		for (int film :enSpan()) {
@@ -253,7 +253,17 @@ Film* ListeFilms::trouverFilmCritere(T valeur) {
 
 		return;
 	};
+}*/
+template <typename Critere>
+Film* ListeFilms::rechercherCritere(const Critere critere) {
+	for (Film* elem : this->enSpan()) {
+		if (critere(elem))
+			return elem;
+	}
+	return nullptr;
 }
+
+//function critere = [](Film* film) -> bool { return film->recette==100;  };
 
 
 int main()
@@ -305,5 +315,5 @@ int main()
 //	string filmEnString = tamponStringStream.str();
 //	ofstream fichier("unfilm.txt");
 //	fichier << *listeFilms.enSpan()[0];
-
+	cout << *listeFilms.rechercherCritere( [](Film* film) { return film->recette == 955; });
 }

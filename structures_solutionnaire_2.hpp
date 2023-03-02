@@ -21,8 +21,11 @@ public:
 	shared_ptr<Acteur> trouverActeur(const std::string& nomActeur) const;
 	span<Film*> enSpan() const;
 	int size() const { return nElements; }
+
 	template <typename T>
 	Film* trouverFilmCritere(T critere);
+	template <typename Critere>
+	Film* rechercherCritere(const Critere critere);
 
 private:
 	void changeDimension(int nouvelleCapacite);
