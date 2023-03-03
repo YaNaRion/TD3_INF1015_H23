@@ -85,7 +85,7 @@ void ListeFilms::enleverFilm(const Film* film)
 	}
 }
 
-span<shared_ptr<Acteur>> spanListeActeurs(const ListeActeurs& liste) {
+span<shared_ptr<Acteur>> spanListeActeurs(const Liste<Acteur>& liste) {
 	return span<shared_ptr<Acteur>>(liste.elements.get(), liste.nElements);
 }
 
@@ -225,9 +225,11 @@ void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomA
 */
 
 Film::Film() {
-	std::string titre = "PasDeTitre", realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
-	int anneeSortie = 0, recette = 0;
-	ListeActeurs acteurs = {};
+	titre = "PasDeTitre";
+	realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
+	anneeSortie = 0;
+	recette = 0;
+	acteurs = {};
 }
 Film::Film(const Film& autreFilm) :
 	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
@@ -244,16 +246,6 @@ Film& Film::operator= (const Film& autre) {
 	return *this;
 }
 
-/*template<typename T>
-Film* ListeFilms::trouverFilmCritere(T valeur) {
-	auto trouverfilm = [](T valeur) -> Film* {
-		for (int film :enSpan()) {
-			if (typeid(T).name ==  )
-		}
-
-		return;
-	};
-}*/
 template <typename Critere>
 Film* ListeFilms::rechercherCritere(const Critere critere) {
 	for (Film* elem : this->enSpan()) {
@@ -263,7 +255,18 @@ Film* ListeFilms::rechercherCritere(const Critere critere) {
 	return nullptr;
 }
 
-//function critere = [](Film* film) -> bool { return film->recette==100;  };
+template <class Element>
+Liste<Element>::Liste() {
+	capacite = 0;
+	nElements = 0;
+	elements = make_unique<shared_ptr<Element>[]>(1);
+}
+template <class Element>
+Liste<Element>::Liste(const int taille) {
+	capacite = taille;
+	nElements = taille;
+	elements = make_unique<shared_ptr<Element>[]>(taille);
+}
 
 
 int main()
@@ -309,6 +312,18 @@ int main()
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
 
 	afficherListeFilms(listeFilms);
+
+
+	Liste<string> listeTextes(2);
+	listeTextes.elements[0] = make_shared<string>("string1");
+	listeTextes.elements[1] = make_shared<string>("string12");
+	cout << listeTextes.elements[1] << endl;
+
+	
+
+//	auto tableauString = make_unique<shared_ptr<string>[]>(2);
+//	tableauString[0] = make_shared<string>("string1");
+//	tableauString[1] = make_shared<string>("string2");
 
 //	ostringstream tamponStringStream;
 //	tamponStringStream << *listeFilms.enSpan()[0];
