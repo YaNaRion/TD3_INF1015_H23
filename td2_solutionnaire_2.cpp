@@ -229,7 +229,7 @@ Film::Film() {
 	realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	anneeSortie = 0;
 	recette = 0;
-	acteurs = {};
+	acteurs = Liste<Acteur>();
 }
 Film::Film(const Film& autreFilm) :
 	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
@@ -237,14 +237,9 @@ Film::Film(const Film& autreFilm) :
 	acteurs.capacite = autreFilm.acteurs.capacite;
 	acteurs.elements = make_unique<shared_ptr<Acteur>[]>(acteurs.nElements);
 
-	*this = autreFilm;
+	this->acteurs = autreFilm.acteurs;
 }
-Film& Film::operator= (const Film& autre) {
-	for (int i : range(acteurs.nElements)) {
-		acteurs.elements[i] = autre.acteurs.elements[i];
-	}
-	return *this;
-}
+
 
 template <typename Critere>
 Film* ListeFilms::rechercherCritere(const Critere critere) {
@@ -268,6 +263,15 @@ Liste<Element>::Liste(const int taille) {
 	elements = make_unique<shared_ptr<Element>[]>(taille);
 }
 
+template <class Element>
+Liste<Element>& Liste<Element>::operator= (const Liste<Element>& autreListe) {
+	nElements = autreListe.nElements;
+	capacite = autreListe.capacite;
+	for (int i : range(nElements)) {
+		elements[i] = autreListe.elements[i];
+	}
+	return *this;
+}
 
 int main()
 {
@@ -317,13 +321,18 @@ int main()
 	Liste<string> listeTextes(2);
 	listeTextes.elements[0] = make_shared<string>("string1");
 	listeTextes.elements[1] = make_shared<string>("string12");
-	cout << listeTextes.elements[1] << endl;
 
-	
+	Liste<string> listeTextes2(2);
+	listeTextes2 = listeTextes;
 
-//	auto tableauString = make_unique<shared_ptr<string>[]>(2);
-//	tableauString[0] = make_shared<string>("string1");
-//	tableauString[1] = make_shared<string>("string2");
+	shared_ptr<string> stringptr = make_shared<string>("nouvelle string1");
+	listeTextes.elements[0] = stringptr;
+	*listeTextes.elements[1] = "string modifiee";
+
+	cout << *listeTextes.elements[0] << endl;
+	cout << *listeTextes.elements[1] << endl;
+	cout << *listeTextes2.elements[0] << endl;
+	cout << *listeTextes2.elements[1] << endl;
 
 //	ostringstream tamponStringStream;
 //	tamponStringStream << *listeFilms.enSpan()[0];

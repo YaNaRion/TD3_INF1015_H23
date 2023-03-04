@@ -39,6 +39,7 @@ public:
 //	Liste(int capacite, int nElements, unique_ptr<shared_ptr<Element>[]> elements);
 	int capacite = 0, nElements = 0;
 	unique_ptr<shared_ptr<Element>[]> elements = nullptr;
+	Liste<Element>& operator= (const Liste<Element>& autre);
 
 
 };
@@ -52,7 +53,6 @@ struct Film
 	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
 	ListeActeurs acteurs = {};
 	Film(const Film& autreFilm);
-	Film& operator= (const Film& autre);
 };
 
 struct Acteur
