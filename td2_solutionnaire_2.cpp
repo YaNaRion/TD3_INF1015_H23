@@ -51,15 +51,15 @@ string lireString(istream& fichier)
 
 void ListeFilms::changeDimension(int nouvelleCapacite)
 {
-	Film** nouvelleListe = new Film*[nouvelleCapacite];
-	
-	if (elements != nullptr) { 
+	Film** nouvelleListe = new Film * [nouvelleCapacite];
+
+	if (elements != nullptr) {
 		nElements = min(nouvelleCapacite, nElements);
 		for (int i : range(nElements))
 			nouvelleListe[i] = elements[i];
 		delete[] elements;
 	}
-	
+
 	elements = nouvelleListe;
 	capacite = nouvelleCapacite;
 }
@@ -73,9 +73,8 @@ void ListeFilms::ajouterFilm(Film* film)
 
 span<Film*> ListeFilms::enSpan() const { return span(elements, nElements); }
 
-void ListeFilms::enleverFilm(const Film* film)
-{
-	for (Film*& element : enSpan()) {  
+void ListeFilms::enleverFilm(const Film* film) {
+	for (Film*& element : enSpan()) {
 		if (element == film) {
 			if (nElements > 1)
 				element = elements[nElements - 1];
@@ -89,8 +88,7 @@ span<shared_ptr<Acteur>> spanListeActeurs(const Liste<Acteur>& liste) {
 	return span<shared_ptr<Acteur>>(liste.elements.get(), liste.nElements);
 }
 
-shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const
-{
+shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const{
 	for (const Film* film : enSpan()) {
 		for (shared_ptr<Acteur> acteur : spanListeActeurs(film->acteurs)) {
 			if (acteur->nom == nomActeur)
@@ -101,14 +99,12 @@ shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const
 }
 
 
-shared_ptr<Acteur> lireActeur(istream& fichier
-, ListeFilms& listeFilms
-)
+shared_ptr<Acteur> lireActeur(istream& fichier, ListeFilms& listeFilms)
 {
 	Acteur acteur = {};
-	acteur.nom            = lireString(fichier);
-	acteur.anneeNaissance = lireUint16 (fichier);
-	acteur.sexe           = lireUint8  (fichier);
+	acteur.nom = lireString(fichier);
+	acteur.anneeNaissance = lireUint16(fichier);
+	acteur.sexe = lireUint8(fichier);
 
 	shared_ptr<Acteur> acteurExistant = listeFilms.trouverActeur(acteur.nom);
 	if (acteurExistant != nullptr)
@@ -120,26 +116,20 @@ shared_ptr<Acteur> lireActeur(istream& fichier
 
 }
 
-Film* lireFilm(istream& fichier
-, ListeFilms& listeFilms
-)
-{
+Film* lireFilm(istream& fichier, ListeFilms& listeFilms){
 	Film* film = new Film;
-	film->titre       = lireString(fichier);
+	film->titre = lireString(fichier);
 	film->realisateur = lireString(fichier);
-	film->anneeSortie = lireUint16 (fichier);
-	film->recette     = lireUint16 (fichier);
-	film->acteurs.nElements = lireUint8 (fichier);
+	film->anneeSortie = lireUint16(fichier);
+	film->recette = lireUint16(fichier);
+	film->acteurs.nElements = lireUint8(fichier);
 	film->acteurs.elements = make_unique<shared_ptr<Acteur>[]>(film->acteurs.nElements);
 	cout << "Création Film " << film->titre << endl;
 	//filmp->acteurs.elements = new Acteur*[filmp->acteurs.nElements];
 
 	for (shared_ptr<Acteur>& acteur : spanListeActeurs(film->acteurs)) {
 		acteur = lireActeur(fichier, listeFilms);
-
-
 	}
-
 	return film;
 
 }
@@ -148,11 +138,11 @@ ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true)
 {
 	ifstream fichier(nomFichier, ios::binary);
 	fichier.exceptions(ios::failbit);
-	
-	int nElements = lireUint16(fichier);
 
-	for ([[maybe_unused]] int i : range(nElements)) { 
-		ajouterFilm(lireFilm(fichier, *this)); 
+	int nElement = lireUint16(fichier);
+
+	for ([[maybe_unused]] int i : range(nElement)) {
+		ajouterFilm(lireFilm(fichier, *this));
 	}
 
 }
@@ -160,7 +150,7 @@ ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true)
 void detruireActeur(shared_ptr<Acteur> acteur)
 {
 	cout << "Destruction Acteur " << acteur->nom << endl;
-	delete &acteur;
+	delete& acteur;
 }
 
 void detruireFilm(Film* film)
@@ -191,14 +181,14 @@ ostream& operator<< (ostream& o, const Film& film) {
 
 	o << "Acteurs:" << endl;
 	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.acteurs))
-		o<< *acteur;
+		o << *acteur;
 	return o;
 }
 
 void afficherListeFilms(const ListeFilms& listeFilms)
 {
 
-	static const string ligneDeSeparation = 
+	static const string ligneDeSeparation =
 		"\033[32m────────────────────────────────────────\033[0m\n";
 
 	cout << ligneDeSeparation;
@@ -215,7 +205,7 @@ void afficherListeFilms(const ListeFilms& listeFilms)
 /*
 void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
 {
-	const shared_ptr<Acteur> acteur = 
+	const shared_ptr<Acteur> acteur =
 		listeFilms.trouverActeur(nomActeur);
 	if (acteur == nullptr)
 		cout << "Aucun acteur de ce nom" << endl;
@@ -229,8 +219,8 @@ Film::Film() {
 	realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	anneeSortie = 0;
 	recette = 0;
-	acteurs = {};
 }
+
 Film::Film(const Film& autreFilm) :
 	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
 	acteurs.nElements = autreFilm.acteurs.nElements;
@@ -239,6 +229,7 @@ Film::Film(const Film& autreFilm) :
 
 	*this = autreFilm;
 }
+
 Film& Film::operator= (const Film& autre) {
 	for (int i : range(acteurs.nElements)) {
 		acteurs.elements[i] = autre.acteurs.elements[i];
@@ -255,32 +246,24 @@ Film* ListeFilms::rechercherCritere(const Critere critere) {
 	return nullptr;
 }
 
-template <class Element>
-Liste<Element>::Liste() {
-	capacite = 0;
-	nElements = 0;
-	elements = make_unique<shared_ptr<Element>[]>(1);
+template<class Element>
+Liste<Element>& Liste<Element>::operator+=(const shared_ptr<string> listeACopier) {
+	this->elements[1] = *listeACopier;
+	return *this;
 }
-template <class Element>
-Liste<Element>::Liste(const int taille) {
-	capacite = taille;
-	nElements = taille;
-	elements = make_unique<shared_ptr<Element>[]>(taille);
-}
-
 
 int main()
 {
-	#ifdef VERIFICATION_ALLOCATION_INCLUS
+#ifdef VERIFICATION_ALLOCATION_INCLUS
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
-	#endif
-	bibliotheque_cours::activerCouleursAnsi(); 
+#endif
+	bibliotheque_cours::activerCouleursAnsi();
 	//int* fuite = new int; 
 
 	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
 
 	ListeFilms listeFilms("films.bin");
-	
+
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 
 	//afficherFilm(*listeFilms.enSpan()[0]);
@@ -288,13 +271,13 @@ int main()
 	cout << *spanListeFilm[0];
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
-	
+
 	afficherListeFilms(listeFilms);
-	
+
 	listeFilms.trouverActeur("Benedict Cumberbatch")->anneeNaissance = 1976;
-	
+
 	cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
-	
+
 	//afficherFilmographieActeur(listeFilms, "Benedict Cumberbatch");
 
 
@@ -304,7 +287,7 @@ int main()
 	skylien.acteurs.elements[0]->nom = "Daniel Wroughton Craig";
 
 	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
-	
+
 	detruireFilm(spanListeFilm[0]);
 	listeFilms.enleverFilm(spanListeFilm[0]);
 
@@ -314,21 +297,18 @@ int main()
 	afficherListeFilms(listeFilms);
 
 
-	Liste<string> listeTextes(2);
-	listeTextes.elements[0] = make_shared<string>("string1");
-	listeTextes.elements[1] = make_shared<string>("string12");
-	cout << listeTextes.elements[1] << endl;
+	Liste<string> listeTextes = 2;
+	listeTextes.elements[0] = make_shared<string>("Rome Total war");
+	listeTextes.elements[1] = make_shared<string>("Medieval 2 total war");
+	cout << *listeTextes.elements[1] << endl;
+	Liste<string> listeTextes2 = listeTextes;
+	listeTextes.elements[0] = make_shared<string>("Rome Remaster Total war");
+	listeTextes += make_shared<string>("Napoléon Total war");
+	cout << *listeTextes.elements[0] << endl;
+	cout << *listeTextes.elements[1] << endl;
+	cout << *listeTextes2.elements[0] << endl;
+	cout << *listeTextes2.elements[1] << endl;
 
-	
 
-//	auto tableauString = make_unique<shared_ptr<string>[]>(2);
-//	tableauString[0] = make_shared<string>("string1");
-//	tableauString[1] = make_shared<string>("string2");
-
-//	ostringstream tamponStringStream;
-//	tamponStringStream << *listeFilms.enSpan()[0];
-//	string filmEnString = tamponStringStream.str();
-//	ofstream fichier("unfilm.txt");
-//	fichier << *listeFilms.enSpan()[0];
-	cout << *listeFilms.rechercherCritere( [](Film* film) { return film->recette == 955; });
+	cout << *listeFilms.rechercherCritere([](Film* film) { return film->recette == 955; });
 }

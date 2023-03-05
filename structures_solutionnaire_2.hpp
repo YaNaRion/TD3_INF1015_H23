@@ -34,23 +34,27 @@ private:
 template <class Element>
 class Liste {
 public:
-	Liste();
-	Liste(const int taille);
-//	Liste(int capacite, int nElements, unique_ptr<shared_ptr<Element>[]> elements);
-	int capacite = 0, nElements = 0;
-	unique_ptr<shared_ptr<Element>[]> elements = nullptr;
-
-
+	int capacite = 0;
+	int nElements = 0;
+	unique_ptr<shared_ptr<Element>[]> elements;
+	Liste() = default;
+	Liste(int taille) : capacite(taille), nElements(taille), elements(new shared_ptr<Element>[taille]) {}
+	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(new shared_ptr<Element>[listeACopier.capacite]) {
+		for (int i = 0; i < listeACopier.nElements; i++) {
+			elements[i] = listeACopier.elements[i];
+		}
+	}
+	Liste& operator+=(const shared_ptr<string> listeACopier);
 };
-using ListeActeurs = Liste<Acteur>;
 
+using ListeActeurs = Liste<Acteur>;
 
 struct Film
 {
 	Film();
 	std::string titre = "PasDeTitre", realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
-	ListeActeurs acteurs = {};
+	ListeActeurs acteurs;
 	Film(const Film& autreFilm);
 	Film& operator= (const Film& autre);
 };
