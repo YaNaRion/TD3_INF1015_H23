@@ -1,4 +1,12 @@
-﻿//*** Solutionnaire version 2, sans les //[ //] au bon endroit car le code est assez différent du code fourni.
+﻿/* 
+Ce code crée et gère une collection de films
+Auteurs: Yann Druet et Julien Lavigne
+Date : 5 mars 2023
+Date de création : 26 février 2023
+
+Ce code est tiré du solutionnaire du TD2 écrit par François-R Boyer.
+*/
+
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 
@@ -317,6 +325,7 @@ int main()
 
 	afficherListeFilms(listeFilms);
 
+	cout << ligneDeSeparation;
 
 	Liste<string> listeTextes(2);
 	listeTextes.elements[0] = make_shared<string>("string1");
@@ -333,6 +342,8 @@ int main()
 	cout << *listeTextes.elements[1] << endl;
 	cout << *listeTextes2.elements[0] << endl;
 	cout << *listeTextes2.elements[1] << endl;
+
+	cout << ligneDeSeparation;
 
 //	ostringstream tamponStringStream;
 //	tamponStringStream << *listeFilms.enSpan()[0];
