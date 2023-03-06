@@ -56,7 +56,6 @@ struct Film
 	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
 	ListeActeurs acteurs;
 	Film(const Film& autreFilm);
-	Film& operator= (const Film& autre);
 };
 
 struct Acteur

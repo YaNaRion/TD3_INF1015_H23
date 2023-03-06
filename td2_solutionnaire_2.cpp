@@ -227,7 +227,7 @@ Film::Film(const Film& autreFilm) :
 	acteurs.capacite = autreFilm.acteurs.capacite;
 	acteurs.elements = make_unique<shared_ptr<Acteur>[]>(acteurs.nElements);
 
-	*this = autreFilm;
+	this->acteurs = autreFilm.acteurs;
 }
 
 Film& Film::operator= (const Film& autre) {
@@ -236,6 +236,7 @@ Film& Film::operator= (const Film& autre) {
 	}
 	return *this;
 }
+
 
 template <typename Critere>
 Film* ListeFilms::rechercherCritere(const Critere critere) {
