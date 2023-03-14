@@ -44,11 +44,42 @@ public:
 			elements[i] = listeACopier.elements[i];
 		}
 	}
-	Liste& operator+=(const shared_ptr<string> listeACopier);
 };
 
 using ListeActeurs = Liste<Acteur>;
 
+
+class Item {
+public:
+	const string avoirTitre() const { return titre; }
+	const int avoirAnneSortie() const { return anneeSortie; }
+
+private:
+	string titre = "PasDeTitre";
+	int anneeSortie = 0;
+
+	friend class ListeFilms;
+	friend class Film;
+	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+};
+
+class Film : public Item {
+public:
+	Film();
+	Film(const Film& autreFilm);
+	Film& operator= (const Film& autreFilm);
+	string avoirTitreNonConst() { return titre; }
+	const string avoirRealisateur() const { return realisateur; }
+	const int avoirRecette() const { return recette; }
+	const ListeActeurs avoirActeur() const { return acteurs; }
+	friend class ListeFilms;
+	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+private:
+	string realisateur = "PasDeRealisateur";
+	int recette = 0;
+	ListeActeurs acteurs;
+};
+/*
 struct Film
 {
 	Film();
@@ -56,8 +87,10 @@ struct Film
 	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
 	ListeActeurs acteurs;
 	Film(const Film& autreFilm);
-};
+	Film& operator= (const Film& autreFilm);
 
+};
+*/
 struct Acteur
 {
 	std::string nom; int anneeNaissance; char sexe;

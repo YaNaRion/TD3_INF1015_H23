@@ -1,4 +1,12 @@
-﻿//*** Solutionnaire version 2, sans les //[ //] au bon endroit car le code est assez différent du code fourni.
+﻿/*
+Ce code crée et gère une collection de films
+Auteurs: Yann Druet et Julien Lavigne
+Date : 5 mars 2023
+Date de création : 26 février 2023
+
+Ce code est tiré du solutionnaire du TD2 écrit par François-R Boyer.
+*/
+
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 
@@ -26,20 +34,17 @@ typedef uint16_t UInt16;
 
 #pragma region "Fonctions de base pour lire le fichier binaire"//{
 
-UInt8 lireUint8(istream& fichier)
-{
+UInt8 lireUint8(istream& fichier){
 	UInt8 valeur = 0;
 	fichier.read((char*)&valeur, sizeof(valeur));
 	return valeur;
 }
-UInt16 lireUint16(istream& fichier)
-{
+UInt16 lireUint16(istream& fichier){
 	UInt16 valeur = 0;
 	fichier.read((char*)&valeur, sizeof(valeur));
 	return valeur;
 }
-string lireString(istream& fichier)
-{
+string lireString(istream& fichier){
 	string texte;
 	texte.resize(lireUint16(fichier));
 	fichier.read((char*)&texte[0], streamsize(sizeof(texte[0])) * texte.length());
@@ -49,8 +54,7 @@ string lireString(istream& fichier)
 #pragma endregion//}
 
 
-void ListeFilms::changeDimension(int nouvelleCapacite)
-{
+void ListeFilms::changeDimension(int nouvelleCapacite){
 	Film** nouvelleListe = new Film * [nouvelleCapacite];
 
 	if (elements != nullptr) {
@@ -64,8 +68,7 @@ void ListeFilms::changeDimension(int nouvelleCapacite)
 	capacite = nouvelleCapacite;
 }
 
-void ListeFilms::ajouterFilm(Film* film)
-{
+void ListeFilms::ajouterFilm(Film* film){
 	if (nElements == capacite)
 		changeDimension(max(1, capacite * 2));
 	elements[nElements++] = film;
@@ -99,8 +102,7 @@ shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const{
 }
 
 
-shared_ptr<Acteur> lireActeur(istream& fichier, ListeFilms& listeFilms)
-{
+shared_ptr<Acteur> lireActeur(istream& fichier, ListeFilms& listeFilms){
 	Acteur acteur = {};
 	acteur.nom = lireString(fichier);
 	acteur.anneeNaissance = lireUint16(fichier);
@@ -125,17 +127,13 @@ Film* lireFilm(istream& fichier, ListeFilms& listeFilms){
 	film->acteurs.nElements = lireUint8(fichier);
 	film->acteurs.elements = make_unique<shared_ptr<Acteur>[]>(film->acteurs.nElements);
 	cout << "Création Film " << film->titre << endl;
-	//filmp->acteurs.elements = new Acteur*[filmp->acteurs.nElements];
-
 	for (shared_ptr<Acteur>& acteur : spanListeActeurs(film->acteurs)) {
 		acteur = lireActeur(fichier, listeFilms);
 	}
 	return film;
-
 }
 
-ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true)
-{
+ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true){
 	ifstream fichier(nomFichier, ios::binary);
 	fichier.exceptions(ios::failbit);
 
@@ -147,20 +145,17 @@ ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true)
 
 }
 
-void detruireActeur(shared_ptr<Acteur> acteur)
-{
+void detruireActeur(shared_ptr<Acteur> acteur){
 	cout << "Destruction Acteur " << acteur->nom << endl;
 	delete& acteur;
 }
 
-void detruireFilm(Film* film)
-{
-	cout << "Destruction Film " << film->titre << endl;
+void detruireFilm(Film* film){
+	cout << "Destruction Film " << film->avoirTitre() << endl;
 	delete film;
 }
 
-ListeFilms::~ListeFilms()
-{
+ListeFilms::~ListeFilms(){
 	if (possedeLesFilms_)
 		for (Film* film : enSpan())
 			detruireFilm(film);
@@ -175,18 +170,17 @@ ostream& operator<<(ostream& o, const Acteur& acteur) {
 
 //]
 ostream& operator<< (ostream& o, const Film& film) {
-	o << "Titre: " << film.titre << endl;
-	o << "  Réalisateur: " << film.realisateur << "  Année :" << film.anneeSortie << endl;
-	o << "  Recette: " << film.recette << "M$" << endl;
+	o << "Titre: " << film.avoirTitre() << endl;
+	o << "  Réalisateur: " << film.avoirRealisateur() << "  Année :" << film.avoirAnneSortie() << endl;
+	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
 
 	o << "Acteurs:" << endl;
-	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.acteurs))
+	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.avoirActeur()))
 		o << *acteur;
 	return o;
 }
 
-void afficherListeFilms(const ListeFilms& listeFilms)
-{
+void afficherListeFilms(const ListeFilms& listeFilms) {
 
 	static const string ligneDeSeparation =
 		"\033[32m────────────────────────────────────────\033[0m\n";
@@ -221,18 +215,18 @@ Film::Film() {
 	recette = 0;
 }
 
-Film::Film(const Film& autreFilm) :
-	titre(autreFilm.titre), realisateur(autreFilm.realisateur), anneeSortie(autreFilm.anneeSortie), recette(autreFilm.recette) {
+Film::Film(const Film& autreFilm) :  realisateur(autreFilm.realisateur), recette(autreFilm.recette) {
+	titre = autreFilm.titre;
+	anneeSortie = autreFilm.anneeSortie;
 	acteurs.nElements = autreFilm.acteurs.nElements;
 	acteurs.capacite = autreFilm.acteurs.capacite;
 	acteurs.elements = make_unique<shared_ptr<Acteur>[]>(acteurs.nElements);
-
-	this->acteurs = autreFilm.acteurs;
+	*this = autreFilm;
 }
 
-Film& Film::operator= (const Film& autre) {
+Film& Film::operator= (const Film& autreFilm) {
 	for (int i : range(acteurs.nElements)) {
-		acteurs.elements[i] = autre.acteurs.elements[i];
+		acteurs.elements[i] = autreFilm.acteurs.elements[i];
 	}
 	return *this;
 }
@@ -247,14 +241,7 @@ Film* ListeFilms::rechercherCritere(const Critere critere) {
 	return nullptr;
 }
 
-template<class Element>
-Liste<Element>& Liste<Element>::operator+=(const shared_ptr<string> listeACopier) {
-	this->elements[1] = *listeACopier;
-	return *this;
-}
-
-int main()
-{
+int main(){
 #ifdef VERIFICATION_ALLOCATION_INCLUS
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 #endif
@@ -269,7 +256,7 @@ int main()
 
 	//afficherFilm(*listeFilms.enSpan()[0]);
 	span<Film*> spanListeFilm = listeFilms.enSpan();
-	cout << *spanListeFilm[0];
+	//cout << *spanListeFilm[0];
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 
@@ -283,9 +270,9 @@ int main()
 
 
 	Film skylien = *listeFilms.enSpan()[0];
-	skylien.titre = "Skylien";
-	skylien.acteurs.elements[0] = spanListeFilm[1]->acteurs.elements[0];
-	skylien.acteurs.elements[0]->nom = "Daniel Wroughton Craig";
+	skylien.avoirTitreNonConst() = "Skylien";
+	skylien.avoirActeur().elements[0] = spanListeFilm[1]->avoirActeur().elements[0];
+	skylien.avoirActeur().elements[0]->nom = "Daniel Wroughton Craig";
 
 	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
 
@@ -297,19 +284,16 @@ int main()
 
 	afficherListeFilms(listeFilms);
 
-
 	Liste<string> listeTextes = 2;
 	listeTextes.elements[0] = make_shared<string>("Rome Total war");
 	listeTextes.elements[1] = make_shared<string>("Medieval 2 total war");
 	cout << *listeTextes.elements[1] << endl;
 	Liste<string> listeTextes2 = listeTextes;
 	listeTextes.elements[0] = make_shared<string>("Rome Remaster Total war");
-	listeTextes += make_shared<string>("Napoléon Total war");
 	cout << *listeTextes.elements[0] << endl;
 	cout << *listeTextes.elements[1] << endl;
 	cout << *listeTextes2.elements[0] << endl;
 	cout << *listeTextes2.elements[1] << endl;
 
-
-	cout << *listeFilms.rechercherCritere([](Film* film) { return film->recette == 955; });
+	cout << *listeFilms.rechercherCritere([](Film* film) { return film->avoirRecette() == 955; });
 }
