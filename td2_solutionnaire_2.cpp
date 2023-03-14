@@ -1,12 +1,4 @@
-﻿/*
-Ce code crée et gère une collection de films
-Auteurs: Yann Druet et Julien Lavigne
-Date : 5 mars 2023
-Date de création : 26 février 2023
-
-Ce code est tiré du solutionnaire du TD2 écrit par François-R Boyer.
-*/
-
+﻿//*** Solutionnaire version 2, sans les //[ //] au bon endroit car le code est assez différent du code fourni.
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 
