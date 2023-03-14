@@ -79,6 +79,19 @@ private:
 	int recette = 0;
 	ListeActeurs acteurs;
 };
+
+class Livre : public Item {
+public : 
+	const string avoirAuteur() const { return auteur; }
+	const int avoirCopieVendues() const{ return copieVendues; }
+	const int avoirNombreDePage() const { return nombreDePage; }
+private:
+	string auteur = "PasDAuteur";
+	int copieVendues = 0;
+	int nombreDePage = 0;
+
+};
+
 /*
 struct Film
 {
