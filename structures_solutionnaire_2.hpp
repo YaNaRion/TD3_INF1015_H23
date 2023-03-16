@@ -3,12 +3,13 @@
 
 #include <string>
 #include <cassert>
+#include <vector>
 #include "gsl/span"
 #include "memory"
 using gsl::span;
 using namespace std;
 
-struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
+class Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
 
 class ListeFilms {
 public:
@@ -34,15 +35,16 @@ private:
 template <class Element>
 class Liste {
 public:
-	int capacite = 0;
-	int nElements = 0;
-	unique_ptr<shared_ptr<Element>[]> elements;
-	Liste() = default;
-	Liste(int taille) : capacite(taille), nElements(taille), elements(new shared_ptr<Element>[taille]) {}
-	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(new shared_ptr<Element>[listeACopier.capacite]) {
-		for (int i = 0; i < listeACopier.nElements; i++) {
-			elements[i] = listeACopier.elements[i];
-		}
+	int capacite;
+	int nElements;
+	vector<shared_ptr<Element>> elements;
+	Liste();
+	Liste(int taille) : capacite(taille), nElements(taille), elements(taille) {}
+	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(listeACopier.elements) {
+//		elements = (listeACopier.elements);
+//		for (int i = 0; i < listeACopier.nElements; i++) {
+//			elements.push_back(listeACopier.elements[i]);
+//		}
 	}
 };
 
@@ -71,7 +73,8 @@ public:
 	string avoirTitreNonConst() { return titre; }
 	const string avoirRealisateur() const { return realisateur; }
 	const int avoirRecette() const { return recette; }
-	const ListeActeurs avoirActeur() const { return acteurs; }
+	const ListeActeurs avoirActeurs() const { return acteurs; }
+	ListeActeurs avoirActeursNonConst() { return acteurs; }
 	friend class ListeFilms;
 	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
 private:
