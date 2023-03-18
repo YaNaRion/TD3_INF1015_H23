@@ -23,7 +23,6 @@ public:
 	int size() const { return nElements; }
 	template <typename Critere>
 	Film* rechercherCritere(const Critere critere);
-
 private:
 	void changeDimension(int nouvelleCapacite);
 	int capacite = 0, nElements = 0;
