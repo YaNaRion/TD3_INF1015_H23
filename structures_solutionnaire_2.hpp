@@ -60,7 +60,9 @@ private:
 	int anneeSortie = 0;
 	friend class ListeFilms;
 	friend class Film;
+	friend class Livre;
 	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+
 };
 
 class Film : public Item {
@@ -75,6 +77,7 @@ public:
 	ListeActeurs avoirActeursNonConst() { return acteurs; }
 	friend class ListeFilms;
 	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+
 private:
 	string realisateur = "PasDeRealisateur";
 	int recette = 0;
@@ -83,6 +86,8 @@ private:
 
 class Livre : public Item {
 public : 
+	Livre() = default;
+	Livre(string titre, int anneeSortie, string auteur, int copieVendues, int nombrePage );
 	const string avoirAuteur() const { return auteur; }
 	const int avoirCopieVendues() const{ return copieVendues; }
 	const int avoirNombreDePage() const { return nombreDePage; }
