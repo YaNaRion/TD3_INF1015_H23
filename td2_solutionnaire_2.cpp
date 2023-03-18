@@ -8,10 +8,13 @@
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
 #include "memory"
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <fstream>
 #include <string>
 #include <limits>
 #include <algorithm>
+#include <vector>
 #include "cppitertools/range.hpp"
 #include "gsl/span"
 #include "debogage_memoire.hpp"        // Ajout des numéros de ligne des "new" dans le rapport de fuites.  Doit être après les include du système, qui peuvent utiliser des "placement new" (non supporté par notre ajout de numéros de lignes).
@@ -248,7 +251,23 @@ Liste<Element>::Liste() {
 }
 
 
+Livre::Livre(string titree, int anneSortie, string auteure, int copiVendues, int nombrePage) {
+	titre = titree;
+	anneeSortie = anneSortie;
+	auteur = auteure;
+	copieVendues = copiVendues;
+	nombreDePage = nombrePage;
+}
 
+
+vector<Item*> creerBibliotheque(ListeFilms& listeFilm) {
+	span<Film*> spanListeFilm = listeFilm.enSpan();
+	vector<Item*> vecteur;
+	for (Film* elem : spanListeFilm) {
+		vecteur.push_back(elem);
+	}
+	return vecteur;
+}
 
 int main(){
 #ifdef VERIFICATION_ALLOCATION_INCLUS
@@ -260,6 +279,8 @@ int main(){
 	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
 
 	ListeFilms listeFilms("films.bin");
+
+
 
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 
@@ -287,7 +308,6 @@ int main(){
 
 	detruireFilm(spanListeFilm[0]);
 	listeFilms.enleverFilm(spanListeFilm[0]);
-
 
 	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
 
