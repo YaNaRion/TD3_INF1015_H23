@@ -79,13 +79,13 @@ void ListeFilms::enleverFilm(const Film* film) {
 	}
 }
 
-span<shared_ptr<Acteur>> spanListeActeurs(const Liste<Acteur>& liste) {
-	return span<shared_ptr<Acteur>>(liste.elements.get(), liste.nElements);
-}
+//span<shared_ptr<Acteur>> spanListeActeurs(const Liste<Acteur>& liste) {
+//	return span(liste.elements);
+//}
 
 shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const{
 	for (const Film* film : enSpan()) {
-		for (shared_ptr<Acteur> acteur : spanListeActeurs(film->acteurs)) {
+		for (shared_ptr<Acteur> acteur : film->acteurs.elements) {
 			if (acteur->nom == nomActeur)
 				return acteur;
 		}
@@ -117,9 +117,9 @@ Film* lireFilm(istream& fichier, ListeFilms& listeFilms){
 	film->anneeSortie = lireUint16(fichier);
 	film->recette = lireUint16(fichier);
 	film->acteurs.nElements = lireUint8(fichier);
-	film->acteurs.elements = make_unique<shared_ptr<Acteur>[]>(film->acteurs.nElements);
+	film->acteurs.elements = vector<shared_ptr<Acteur>>(film->acteurs.nElements);
 	cout << "Création Film " << film->titre << endl;
-	for (shared_ptr<Acteur>& acteur : spanListeActeurs(film->acteurs)) {
+	for (shared_ptr<Acteur>& acteur : film->acteurs.elements) {
 		acteur = lireActeur(fichier, listeFilms);
 	}
 	return film;
@@ -167,8 +167,10 @@ ostream& operator<< (ostream& o, const Film& film) {
 	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
 
 	o << "Acteurs:" << endl;
-	for (const shared_ptr<Acteur> acteur : spanListeActeurs(film.avoirActeur()))
+	for (const shared_ptr<Acteur>& acteur : film.avoirActeurs().elements) {
 		o << *acteur;
+	}
+
 	return o;
 }
 
@@ -212,7 +214,7 @@ Film::Film(const Film& autreFilm) :  realisateur(autreFilm.realisateur), recette
 	anneeSortie = autreFilm.anneeSortie;
 	acteurs.nElements = autreFilm.acteurs.nElements;
 	acteurs.capacite = autreFilm.acteurs.capacite;
-	acteurs.elements = make_unique<shared_ptr<Acteur>[]>(acteurs.nElements);
+	acteurs.elements = vector<shared_ptr<Acteur>>(acteurs.nElements);
 	*this = autreFilm;
 }
 
@@ -233,6 +235,21 @@ Film* ListeFilms::rechercherCritere(const Critere critere) {
 	return nullptr;
 }
 
+template <class Element>
+Liste<Element>::Liste() {
+	capacite = 0;
+	nElements = 0;
+
+	vector<shared_ptr<Element>> elementss;
+	for (auto& elem : elementss) {
+		elem = make_shared<Element>();
+	}
+	elements = elementss;
+}
+
+
+
+
 int main(){
 #ifdef VERIFICATION_ALLOCATION_INCLUS
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
@@ -248,7 +265,7 @@ int main(){
 
 	//afficherFilm(*listeFilms.enSpan()[0]);
 	span<Film*> spanListeFilm = listeFilms.enSpan();
-	//cout << *spanListeFilm[0];
+	cout << *spanListeFilm[0];
 
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 
@@ -263,8 +280,8 @@ int main(){
 
 	Film skylien = *listeFilms.enSpan()[0];
 	skylien.avoirTitreNonConst() = "Skylien";
-	skylien.avoirActeur().elements[0] = spanListeFilm[1]->avoirActeur().elements[0];
-	skylien.avoirActeur().elements[0]->nom = "Daniel Wroughton Craig";
+	skylien.avoirActeursNonConst().elements[0] = spanListeFilm[1]->avoirActeursNonConst().elements[0];
+	skylien.avoirActeurs().elements[0]->nom = "Daniel Wroughton Craig";
 
 	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
 
