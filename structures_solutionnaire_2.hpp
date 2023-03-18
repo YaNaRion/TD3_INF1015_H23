@@ -58,7 +58,6 @@ public:
 private:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
-
 	friend class ListeFilms;
 	friend class Film;
 	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
