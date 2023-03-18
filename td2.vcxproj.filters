@@ -39,4 +39,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\INF1015_TP3\livres.txt">
+      <Filter>Fichiers sources</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

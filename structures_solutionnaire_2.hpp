@@ -54,7 +54,8 @@ class Item {
 public:
 	const string avoirTitre() const { return titre; }
 	const int avoirAnneSortie() const { return anneeSortie; }
-
+	void modifierTitre(string nouvTitre) { titre = nouvTitre; }
+	void modifierAnneeSortie(string nouvAnneeSortie) { anneeSortie = stoi(nouvAnneeSortie); }
 private:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
@@ -91,6 +92,10 @@ public :
 	const string avoirAuteur() const { return auteur; }
 	const int avoirCopieVendues() const{ return copieVendues; }
 	const int avoirNombreDePage() const { return nombreDePage; }
+	void modifierAuteur(string nouvAuteur) { auteur = nouvAuteur; }
+	void modifierCopieVendues(string nouvCopieVendues) { copieVendues = stoi(nouvCopieVendues); }
+	void modifierNombreDePage(string nouvNombrePage) { nombreDePage = stoi(nouvNombrePage); }
+
 private:
 	string auteur = "PasDAuteur";
 	int copieVendues = 0;

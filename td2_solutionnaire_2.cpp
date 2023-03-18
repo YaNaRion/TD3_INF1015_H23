@@ -269,7 +269,71 @@ vector<Item*> creerBibliotheque(ListeFilms& listeFilm) {
 	return vecteur;
 }
 
+
+vector<Item*> lireLivre(const string& nomFichier) {
+	ifstream fichierLivre;
+	cout << nomFichier;
+	fichierLivre.open(nomFichier);
+	string texte;
+	vector<string> livreDansFichier;
+	vector<Item*> listeLivre;
+	cout << fichierLivre.is_open();
+	if (fichierLivre.is_open()) {
+		while(getline(fichierLivre, texte)){
+			livreDansFichier.push_back(texte);
+		}
+		int i = 0;
+		for (i; i < livreDansFichier.size(); i++) {
+			texte = livreDansFichier[i];
+			int compte = 0;
+			Livre* livreTemp = new Livre;
+			string donneTemp;
+			int j = 0;
+			for (j;; j++) {
+				if (texte[j] == '\t') {
+					if (compte == 0) {
+						livreTemp->modifierTitre(donneTemp);
+					}
+					else if (compte == 1) {
+						livreTemp->modifierAnneeSortie(donneTemp);
+					}
+					else if (compte == 2) {
+						livreTemp->modifierAuteur(donneTemp);
+					}
+					else if (compte == 3) {
+						livreTemp->modifierCopieVendues(donneTemp);
+					}
+					else if (compte == 4) {
+						livreTemp->modifierNombreDePage(donneTemp);
+					}
+					compte++;
+					donneTemp = "";
+				}
+				else if (texte[j] == '\n') listeLivre.push_back(livreTemp);
+				else if (texte[j] == 34) continue;
+				else if (texte[j] == '\0') break;
+				else {
+					donneTemp += texte[j];
+				}
+			}
+		}
+		cout << "tous va bien";
+	}
+	else { cout << "probleme"; }
+	return listeLivre;
+}
+
+
 int main(){
+	string fichierLivre = "C://Users//druet//source//repos//INF1015_TP3//livres.txt";
+	vector<Item*> listeLivre= lireLivre(fichierLivre);
+	cout << "lol";
+	return 0;
+
+
+
+
+	/*
 #ifdef VERIFICATION_ALLOCATION_INCLUS
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 #endif
@@ -325,4 +389,5 @@ int main(){
 	cout << *listeTextes2.elements[1] << endl;
 
 	cout << *listeFilms.rechercherCritere([](Film* film) { return film->avoirRecette() == 955; });
+	*/
 }

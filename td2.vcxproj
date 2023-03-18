@@ -36,7 +36,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/execution-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -54,6 +54,9 @@
     <ClInclude Include="debogage_memoire.hpp" />
     <ClInclude Include="structures_solutionnaire_2.hpp" />
     <ClInclude Include="verification_allocation.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\INF1015_TP3\livres.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
