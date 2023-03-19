@@ -59,6 +59,7 @@ public:
 	const int avoirAnneSortie() const { return anneeSortie; }
 	void modifierTitre(string nouvTitre) { titre = nouvTitre; }
 	void modifierAnneeSortie(string nouvAnneeSortie) { anneeSortie = stoi(nouvAnneeSortie); }
+	void modifierAnneeSortie(int nouvAnneeSortie) { anneeSortie = nouvAnneeSortie; }
 	virtual void afficher() const;
 	friend ostream& operator<<(ostream&,const Item&);
 private:
@@ -81,12 +82,15 @@ public:
 	const int avoirRecette() const { return recette; }
 	const ListeActeurs avoirActeurs() const { return acteurs; }
 	ListeActeurs avoirActeursNonConst() { return acteurs; }
+	void modifierRealisateur(string nouvRealisateur) { realisateur = nouvRealisateur; }
+	void modifierRecette(int nouvRecette) { recette = nouvRecette; }
+	void modifierActeur(ListeActeurs nouvActeurs) { acteurs = nouvActeurs; }
 	friend class ListeFilms;
 	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
 	friend ostream& operator<<(ostream&, const Film&);
 	virtual void afficher() const;
 
-private:
+protected:
 	string realisateur = "PasDeRealisateur";
 	int recette = 0;
 	ListeActeurs acteurs;
@@ -101,22 +105,26 @@ public :
 	const int avoirNombreDePage() const { return nombreDePage; }
 	void modifierAuteur(string nouvAuteur) { auteur = nouvAuteur; }
 	void modifierCopieVendues(string nouvCopieVendues) { copieVendues = stoi(nouvCopieVendues); }
+	void modifierCopieVendues(int nouvCopieVendues) { copieVendues = nouvCopieVendues; }
 	void modifierNombreDePage(string nouvNombrePage) { nombreDePage = stoi(nouvNombrePage); }
+	void modifierNombreDePage(int nouvNombrePage) { nombreDePage = nouvNombrePage; }
 	friend ostream& operator<<(ostream&, const Livre&);
 	virtual void afficher() const;
 
 
-private:
+protected:
 	string auteur = "PasDAuteur";
 	int copieVendues = 0;
 	int nombreDePage = 0;
 
 };
-
+/*
 class FilmLivre : public Film, public Livre {
-	FilmLivre(Film& film, Livre& livre);
+public:
+	//FilmLivre(shared_ptr<Film>* film, shared_ptr<Livre>* livre);
+	//void afficher() const override;
 };
-
+*/
 /*
 struct Film
 {

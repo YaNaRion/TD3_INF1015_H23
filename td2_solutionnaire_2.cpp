@@ -365,14 +365,23 @@ void Livre::afficher() const {
 		<< "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
 }
 
-
-FilmLivre::FilmLivre(Film& film, Livre& livre) {
-	modifierAnneeSortie(film.avoirAnneSortie());
-
-
+/*
+FilmLivre::FilmLivre(shared_ptr<Film>& film, shared_ptr<Livre>& livre) {
+	modifierTitre(film->avoirTitre());
+	modifierAnneeSortie(film->avoirAnneSortie());
+	modifierAuteur(livre->avoirAuteur());
+	modifierCopieVendues(livre->avoirCopieVendues());
+	modifierNombreDePage(livre->avoirNombreDePage());
+	modifierRealisateur(film->avoirRealisateur());
+	modifierActeur(film->avoirActeurs());
+	modifierRecette(film->avoirRecette());
 }
 
-
+void FilmLivre::afficher() const {
+	Film::afficher();
+	cout << "Auteur: " << auteur << endl << "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
+}
+*/
 int main(){
 
 #ifdef VERIFICATION_ALLOCATION_INCLUS
@@ -392,7 +401,9 @@ int main(){
 
 	ListeFilms listeFilms("films.bin");
 	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms, listeLivre);
-	cout << *biblio[0];
+	cout << *biblio[9];
+	//FilmLivre hobbit(*biblio[4], biblio[9]);
+	//hobbit.afficher();
 
 //	span<Film*> spanListeFilm = listeFilms.enSpan();
 //	cout << *spanListeFilm[0];
