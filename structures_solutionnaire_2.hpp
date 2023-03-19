@@ -62,7 +62,7 @@ public:
 	void modifierAnneeSortie(int nouvAnneeSortie) { anneeSortie = nouvAnneeSortie; }
 	virtual void afficher() const;
 	friend ostream& operator<<(ostream&,const Item&);
-private:
+protected:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
 	friend class ListeFilms;
@@ -77,7 +77,9 @@ public:
 	Film();
 	Film(const Film& autreFilm);
 	Film& operator= (const Film& autreFilm);
-	string avoirTitreNonConst() { return titre; }
+	string avoirTitreNonConst() const{ return titre; }
+	string avoirTitre() { return titre; }
+	int avoirAnneSortieFilm() const { return anneeSortie; }
 	const string avoirRealisateur() const { return realisateur; }
 	const int avoirRecette() const { return recette; }
 	const ListeActeurs avoirActeurs() const { return acteurs; }
@@ -87,7 +89,6 @@ public:
 	void modifierActeur(ListeActeurs nouvActeurs) { acteurs = nouvActeurs; }
 	friend class ListeFilms;
 	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
-	friend ostream& operator<<(ostream&, const Film&);
 	virtual void afficher() const;
 
 protected:
@@ -108,7 +109,6 @@ public :
 	void modifierCopieVendues(int nouvCopieVendues) { copieVendues = nouvCopieVendues; }
 	void modifierNombreDePage(string nouvNombrePage) { nombreDePage = stoi(nouvNombrePage); }
 	void modifierNombreDePage(int nouvNombrePage) { nombreDePage = nouvNombrePage; }
-	friend ostream& operator<<(ostream&, const Livre&);
 	virtual void afficher() const;
 
 
@@ -118,13 +118,13 @@ protected:
 	int nombreDePage = 0;
 
 };
-/*
+
 class FilmLivre : public Film, public Livre {
 public:
-	//FilmLivre(shared_ptr<Film>* film, shared_ptr<Livre>* livre);
-	//void afficher() const override;
+	FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre);
+	void afficher() const override;
 };
-*/
+
 /*
 struct Film
 {
