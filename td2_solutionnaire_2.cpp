@@ -67,7 +67,6 @@ void ListeFilms::ajouterFilm(shared_ptr<Film> film){
 	elements[nElements++] = film;
 }
 
-//span<Film*> ListeFilms::enSpan() const { return span(elements, nElements); }
 
 void ListeFilms::enleverFilm(const shared_ptr<Film> film) {
 	for (shared_ptr<Film> element : elements) {
@@ -80,9 +79,6 @@ void ListeFilms::enleverFilm(const shared_ptr<Film> film) {
 	}
 }
 
-//span<shared_ptr<Acteur>> spanListeActeurs(const Liste<Acteur>& liste) {
-//	return span(liste.elements);
-//}
 
 shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const{
 	for (const shared_ptr<Film> film : elements) {

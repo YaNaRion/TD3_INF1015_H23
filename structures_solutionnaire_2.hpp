@@ -15,12 +15,9 @@ class ListeFilms {
 public:
 	ListeFilms() = default;
 	ListeFilms(const std::string& nomFichier);
-	ListeFilms(const ListeFilms& l) {}// { assert(l.elements == nullptr); } // Pas demandé dans l'énoncé, mais on veut s'assurer qu'on ne fait jamais de copie de liste, car la copie par défaut ne fait pas ce qu'on veut.  Donc on ne permet pas de copier une liste non vide (la copie de liste vide est utilisée dans la création d'un acteur).
-//	~ListeFilms();
 	void ajouterFilm(shared_ptr<Film> film);
 	void enleverFilm(const shared_ptr<Film> film);
 	shared_ptr<Acteur> trouverActeur(const std::string& nomActeur) const;
-//	span<Film*> enSpan() const;
 	int size() const { return nElements; }
 	template <typename Critere>
 	shared_ptr<Film> rechercherCritere(const Critere critere);
