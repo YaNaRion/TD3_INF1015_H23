@@ -15,19 +15,22 @@ class ListeFilms {
 public:
 	ListeFilms() = default;
 	ListeFilms(const std::string& nomFichier);
-	ListeFilms(const ListeFilms& l) { assert(l.elements == nullptr); } // Pas demandé dans l'énoncé, mais on veut s'assurer qu'on ne fait jamais de copie de liste, car la copie par défaut ne fait pas ce qu'on veut.  Donc on ne permet pas de copier une liste non vide (la copie de liste vide est utilisée dans la création d'un acteur).
-	~ListeFilms();
-	void ajouterFilm(Film* film);
-	void enleverFilm(const Film* film);
+	ListeFilms(const ListeFilms& l) {}// { assert(l.elements == nullptr); } // Pas demandé dans l'énoncé, mais on veut s'assurer qu'on ne fait jamais de copie de liste, car la copie par défaut ne fait pas ce qu'on veut.  Donc on ne permet pas de copier une liste non vide (la copie de liste vide est utilisée dans la création d'un acteur).
+//	~ListeFilms();
+	void ajouterFilm(shared_ptr<Film> film);
+	void enleverFilm(const shared_ptr<Film> film);
 	shared_ptr<Acteur> trouverActeur(const std::string& nomActeur) const;
-	span<Film*> enSpan() const;
+//	span<Film*> enSpan() const;
 	int size() const { return nElements; }
 	template <typename Critere>
-	Film* rechercherCritere(const Critere critere);
+	shared_ptr<Film> rechercherCritere(const Critere critere);
+	vector <shared_ptr<Film>> avoirElements() { return elements; }
+	vector <shared_ptr<Film>> avoirElementsConst() const { return elements; }
 private:
 	void changeDimension(int nouvelleCapacite);
 	int capacite = 0, nElements = 0;
-	Film** elements = nullptr; // Pointeur vers un tableau de Film*, chaque Film* pointant vers un Film.
+	vector <shared_ptr<Film>> elements;
+//	Film** elements = nullptr; // Pointeur vers un tableau de Film*, chaque Film* pointant vers un Film.
 	bool possedeLesFilms_ = false; // Les films seront détruits avec la liste si elle les possède.
 };
 
@@ -56,17 +59,18 @@ public:
 	const int avoirAnneSortie() const { return anneeSortie; }
 	void modifierTitre(string nouvTitre) { titre = nouvTitre; }
 	void modifierAnneeSortie(string nouvAnneeSortie) { anneeSortie = stoi(nouvAnneeSortie); }
+	friend ostream& operator<<(ostream&,const Item&);
 private:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
 	friend class ListeFilms;
 	friend class Film;
 	friend class Livre;
-	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
 
 };
 
-class Film : public Item {
+class Film : virtual public Item {
 public:
 	Film();
 	Film(const Film& autreFilm);
@@ -77,7 +81,8 @@ public:
 	const ListeActeurs avoirActeurs() const { return acteurs; }
 	ListeActeurs avoirActeursNonConst() { return acteurs; }
 	friend class ListeFilms;
-	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
+	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
+	friend ostream& operator<<(ostream&, const Film&);
 
 private:
 	string realisateur = "PasDeRealisateur";
@@ -85,7 +90,7 @@ private:
 	ListeActeurs acteurs;
 };
 
-class Livre : public Item {
+class Livre : virtual public Item {
 public : 
 	Livre() = default;
 	Livre(string titre, int anneeSortie, string auteur, int copieVendues, int nombrePage );
@@ -95,6 +100,8 @@ public :
 	void modifierAuteur(string nouvAuteur) { auteur = nouvAuteur; }
 	void modifierCopieVendues(string nouvCopieVendues) { copieVendues = stoi(nouvCopieVendues); }
 	void modifierNombreDePage(string nouvNombrePage) { nombreDePage = stoi(nouvNombrePage); }
+	friend ostream& operator<<(ostream&, const Livre&);
+
 
 private:
 	string auteur = "PasDAuteur";
