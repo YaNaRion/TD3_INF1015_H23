@@ -61,7 +61,7 @@ public:
 	void modifierAnneeSortie(string nouvAnneeSortie) { anneeSortie = stoi(nouvAnneeSortie); }
 	void modifierAnneeSortie(int nouvAnneeSortie) { anneeSortie = nouvAnneeSortie; }
 	virtual void afficher() const;
-	friend ostream& operator<<(ostream&,const Item&);
+	friend ostream& operator<<(ostream&,Item&);
 protected:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
@@ -69,7 +69,6 @@ protected:
 	friend class Film;
 	friend class Livre;
 	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
-
 };
 
 class Film : virtual public Item {
@@ -122,7 +121,8 @@ protected:
 class FilmLivre : public Film, public Livre {
 public:
 	FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre);
-	void afficher() const override;
+	virtual void afficher() const;
+private:
 };
 
 /*

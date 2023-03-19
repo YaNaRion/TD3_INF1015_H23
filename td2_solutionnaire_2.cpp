@@ -339,7 +339,11 @@ ostream& operator<< (ostream& o, const Film& film) {
 }
 
 
-ostream& operator<<(ostream& os,const Item& item) {
+ostream& operator<<(ostream& os,Item& item) {
+	FilmLivre* a = dynamic_cast<FilmLivre*>(&item);
+	if (a != 0)
+		a->afficher();
+	else
 	item.afficher();
 	return os;
 }
@@ -365,29 +369,29 @@ void Livre::afficher() const {
 		<< "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
 }
 
+void FilmLivre::afficher() const {
+	Film::afficher();
+	cout << "Auteur: " << auteur << endl << "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
+}
 
 FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
 	Film* nouvFilm = dynamic_cast<Film*>(&*film);
 	Livre* nouvLivre = dynamic_cast<Livre*>(&*livre);
 	if (nouvFilm != 0) {
 		if (nouvLivre != 0) {
-			//cout << endl << "titre nouvFilm " << nouvFilm->avoirTitre();
-			modifierTitre(nouvFilm->avoirTitre());
-			modifierAnneeSortie(nouvFilm->avoirAnneSortie());
-			modifierAuteur(nouvLivre->avoirAuteur());
-			modifierCopieVendues(nouvLivre->avoirCopieVendues());
-			modifierNombreDePage(nouvLivre->avoirNombreDePage());
-			modifierRealisateur(nouvFilm->avoirRealisateur());
-			modifierActeur(nouvFilm->avoirActeurs());
-			modifierRecette(nouvFilm->avoirRecette());
+			titre = nouvFilm->avoirTitre();
+			anneeSortie = nouvFilm->avoirAnneSortie();
+			auteur = nouvLivre->avoirAuteur();
+			copieVendues = nouvLivre->avoirCopieVendues();
+			nombreDePage = nouvLivre->avoirNombreDePage();
+			realisateur = nouvFilm->avoirRealisateur();
+			acteurs = nouvFilm->avoirActeurs();
+			recette = nouvFilm->avoirRecette();
 		}
 	}
 }
 
-void FilmLivre::afficher() const {
-	Film::afficher();
-	cout << "Auteur: " << auteur << endl << "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
-}
+
 
 int main(){
 
@@ -409,8 +413,8 @@ int main(){
 	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms, listeLivre);
 //	cout << *biblio[9];
 	FilmLivre hobbit(biblio[4], biblio[9]);
-//	cout << hobbit;
-	hobbit.afficher();
+	cout << hobbit;
+//	hobbit.afficher();
 
 //	span<Film*> spanListeFilm = listeFilms.enSpan();
 //	cout << *spanListeFilm[0];
