@@ -289,35 +289,48 @@ vector<Item*> lireLivre(const string& nomFichier) {
 			Livre* livreTemp = new Livre;
 			string donneTemp;
 			int j = 0;
+			int longeurTexte = texte.length();
 			for (j;; j++) {
-				if (texte[j] == '\t') {
+				if (texte[j] == '\t' || texte[j] == '\0') {
 					if (compte == 0) {
 						livreTemp->modifierTitre(donneTemp);
+						//cout << "jai mis le titre\t";
+						compte++;
 					}
 					else if (compte == 1) {
 						livreTemp->modifierAnneeSortie(donneTemp);
+						//cout << "jai mis lanne\t";
+						compte++;
 					}
 					else if (compte == 2) {
 						livreTemp->modifierAuteur(donneTemp);
+						//cout << "jai mis lauteur\t";
+						compte++;
 					}
 					else if (compte == 3) {
 						livreTemp->modifierCopieVendues(donneTemp);
+						//cout << "jai mis les copies\t";
+						compte++;
 					}
 					else if (compte == 4) {
 						livreTemp->modifierNombreDePage(donneTemp);
+						//cout << "jai mis les pages\t";
+						compte++;
 					}
-					compte++;
 					donneTemp = "";
 				}
-				else if (texte[j] == '\n') listeLivre.push_back(livreTemp);
 				else if (texte[j] == 34) continue;
-				else if (texte[j] == '\0') break;
 				else {
 					donneTemp += texte[j];
 				}
+				if (compte == 5) {
+					cout << "tous va bien";
+					listeLivre.push_back(livreTemp);
+					break;
+				}
 			}
 		}
-		cout << "tous va bien";
+		
 	}
 	else { cout << "probleme"; }
 	return listeLivre;
@@ -327,7 +340,7 @@ vector<Item*> lireLivre(const string& nomFichier) {
 int main(){
 	string fichierLivre = "C://Users//druet//source//repos//INF1015_TP3//livres.txt";
 	vector<Item*> listeLivre= lireLivre(fichierLivre);
-	cout << "lol";
+	cout << listeLivre[0]->avoirTitre();
 	return 0;
 
 
