@@ -325,7 +325,7 @@ ostream& operator<<(ostream& o, const Acteur acteur) {
 //]
 ostream& operator<< (ostream& o, const Film& film) {
 //	o << "Titre: " << film.avoirTitre() << endl << "  Année :" << film.avoirAnneSortie() << endl;
-	o << Item(film);
+//	o << Item(film);
 	o << "  Réalisateur: " << film.avoirRealisateur()  << endl;
 	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
 
@@ -339,20 +339,29 @@ ostream& operator<< (ostream& o, const Film& film) {
 
 
 ostream& operator<<(ostream& os,const Item& item) {
-	os << "Titre: " << item.avoirTitre() << endl; 
-	os << "  Année :" << item.avoirAnneSortie() << endl;
+	item.afficher();
 	return os;
 }
 
+void Item::afficher() const{
+	cout << "Titre: " << titre << endl << "Annee de sortie: " << anneeSortie << endl;
+}
 
+void Film::afficher() const {
+	Item::afficher();
+	cout << "  Réalisateur: " << realisateur << endl
+	 << "  Recette: " << recette << "M$" << endl;
 
+	cout << "Acteurs: " << endl;
+	for (const shared_ptr<Acteur>& acteur : acteurs.elements) {
+		cout << *acteur;
+	}
+}
 
-ostream& operator<<(ostream& os, const Livre& livre) {
-//	os << "Titre: " << livre.avoirTitre();
-	os << Item(livre);
-	os << "Auteur: " << livre.avoirAuteur() << endl
-		<< "Nombre de pages: " << livre.avoirNombreDePage() << "  Copies Vendues: " << livre.avoirCopieVendues() << endl;
-	return os;
+void Livre::afficher() const {
+	Item::afficher();
+	cout << "Auteur: " << auteur << endl
+		<< "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
 }
 
 
@@ -379,7 +388,6 @@ int main(){
 	ListeFilms listeFilms("films.bin");
 	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms);
 	cout << *biblio[0];
-	cout << *biblio[1];
 
 //	span<Film*> spanListeFilm = listeFilms.enSpan();
 //	cout << *spanListeFilm[0];
