@@ -50,7 +50,7 @@ string lireString(istream& fichier){
 
 
 void ListeFilms::changeDimension(int nouvelleCapacite){
-	vector<shared_ptr<Film>> nouvelleListe;//Film * [nouvelleCapacite];
+	vector<shared_ptr<Film>> nouvelleListe;
 
 
 	nElements = min(nouvelleCapacite, nElements);
@@ -129,7 +129,6 @@ ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true){
 	int nElement = lireUint16(fichier);
 
 	for ([[maybe_unused]] int i : range(nElement)) {
-		//ajouterFilm(lireFilm(fichier, *this));
 		elements.push_back(lireFilm(fichier, *this));
 	}
 
@@ -144,14 +143,6 @@ void detruireFilm(Film* film){
 	cout << "Destruction Film " << film->avoirTitre() << endl;
 	delete film;
 }
-
-//ListeFilms::~ListeFilms(){
-//	if (possedeLesFilms_)
-//		for (Film* film : enSpan())
-//			detruireFilm(film);
-//	delete[] elements;
-//}
-//]
 
 
 
@@ -171,21 +162,11 @@ void afficherListeFilms(const ListeFilms& listeFilms) {
 }
 
 
-/*
-void afficherFilmographieActeur(const ListeFilms& listeFilms, const string& nomActeur)
-{
-	const shared_ptr<Acteur> acteur =
-		listeFilms.trouverActeur(nomActeur);
-	if (acteur == nullptr)
-		cout << "Aucun acteur de ce nom" << endl;
-	else
-		afficherListeFilms(acteur->joueDans);
-}
-*/
+
 
 Film::Film() {
 	titre = "PasDeTitre";
-	realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
+	realisateur = "PasDeRealisateur"; 
 	anneeSortie = 0;
 	recette = 0;
 }
@@ -239,7 +220,6 @@ Livre::Livre(string titree, int anneSortie, string auteure, int copiVendues, int
 
 
 vector<shared_ptr<Item>> creerBibliotheque(ListeFilms& listeFilm, vector<shared_ptr<Livre>>& listeLivre) {
-//	span<shared_ptr<Film>> spanListeFilm = ;
 	vector<shared_ptr<Item>> vecteur;
 	for (shared_ptr<Film> elem : listeFilm.avoirElements()) {
 		vecteur.push_back(elem);
@@ -251,7 +231,6 @@ vector<shared_ptr<Item>> creerBibliotheque(ListeFilms& listeFilm, vector<shared_
 
 vector<shared_ptr<Livre>> lireLivre(const string& nomFichier) {
 	ifstream fichierLivre;
-	cout << nomFichier;
 	fichierLivre.open(nomFichier);
 	string texte;
 	vector<string> livreDansFichier;
@@ -261,14 +240,13 @@ vector<shared_ptr<Livre>> lireLivre(const string& nomFichier) {
 		while(getline(fichierLivre, texte)){
 			livreDansFichier.push_back(texte);
 		}
-		int i = 0;
+		unsigned int i = 0;
 		for (i; i < livreDansFichier.size(); i++) {
 			texte = livreDansFichier[i];
 			int compte = 0;
 			shared_ptr<Livre> livreTemp(new Livre);
 			string donneTemp;
 			int j = 0;
-			int longeurTexte = texte.length();
 			for (j;; j++) {
 				if (texte[j] == '\t' || texte[j] == '\0') {
 					if (compte == 0) {
@@ -312,7 +290,7 @@ ostream& operator<<(ostream& o, const Acteur acteur) {
 	return o << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
 }
 
-//]
+
 ostream& operator<< (ostream& o, const Film& film) {
 	o << "  Réalisateur: " << film.avoirRealisateur()  << endl;
 	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
@@ -363,7 +341,7 @@ void FilmLivre::afficher() const {
 
 FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
 	Film* nouvFilm = dynamic_cast<Film*>(&*film);
-	Livre* nouvLivre = dynamic_cast<Livre*>(&*livre);
+	Livre* nouvLivre = dynamic_cast<Livre*>(&*livre); // livre ne sera jamais partiellement construit grâce au constructeur par défaut
 	if (nouvFilm != 0) {
 		if (nouvLivre != 0) {
 			titre = nouvFilm->avoirTitre();
@@ -412,63 +390,5 @@ int main(){
 	cout << hobbit;
 
 	return 0;
-//	span<Film*> spanListeFilm = listeFilms.enSpan();
-//	cout << *spanListeFilm[0];
-//	afficherListeFilms(listeFilms);
 
-
-	
-
-	//int* fuite = new int; 
-/*
-
-
-	ListeFilms listeFilms("films.bin");
-
-
-
-	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
-
-	//afficherFilm(*listeFilms.enSpan()[0]);
-	span<Film*> spanListeFilm = listeFilms.enSpan();
-	cout << *spanListeFilm[0];
-
-	cout << ligneDeSeparation << "Les films sont:" << endl;
-
-	afficherListeFilms(listeFilms);
-
-	listeFilms.trouverActeur("Benedict Cumberbatch")->anneeNaissance = 1976;
-
-	cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
-
-	//afficherFilmographieActeur(listeFilms, "Benedict Cumberbatch");
-
-
-	Film skylien = *listeFilms.enSpan()[0];
-	skylien.avoirTitreNonConst() = "Skylien";
-	skylien.avoirActeursNonConst().elements[0] = spanListeFilm[1]->avoirActeursNonConst().elements[0];
-	skylien.avoirActeurs().elements[0]->nom = "Daniel Wroughton Craig";
-
-	cout << *spanListeFilm[0] << endl << skylien << endl << *spanListeFilm[1] << endl;
-
-	detruireFilm(spanListeFilm[0]);
-	listeFilms.enleverFilm(spanListeFilm[0]);
-
-	cout << ligneDeSeparation << "Les films sont maintenant:" << endl;
-
-	afficherListeFilms(listeFilms);
-
-	Liste<string> listeTextes = 2;
-	listeTextes.elements[0] = make_shared<string>("Rome Total war");
-	listeTextes.elements[1] = make_shared<string>("Medieval 2 total war");
-	cout << *listeTextes.elements[1] << endl;
-	Liste<string> listeTextes2 = listeTextes;
-	listeTextes.elements[0] = make_shared<string>("Rome Remaster Total war");
-	cout << *listeTextes.elements[0] << endl;
-	cout << *listeTextes.elements[1] << endl;
-	cout << *listeTextes2.elements[0] << endl;
-	cout << *listeTextes2.elements[1] << endl;
-
-	cout << *listeFilms.rechercherCritere([](Film* film) { return film->avoirRecette() == 955; });
-	*/
 }

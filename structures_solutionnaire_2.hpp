@@ -27,8 +27,7 @@ private:
 	void changeDimension(int nouvelleCapacite);
 	int capacite = 0, nElements = 0;
 	vector <shared_ptr<Film>> elements;
-//	Film** elements = nullptr; // Pointeur vers un tableau de Film*, chaque Film* pointant vers un Film.
-	bool possedeLesFilms_ = false; // Les films seront détruits avec la liste si elle les possède.
+	bool possedeLesFilms_ = false; 
 };
 
 template <class Element>
@@ -39,12 +38,7 @@ public:
 	vector<shared_ptr<Element>> elements;
 	Liste();
 	Liste(int taille) : capacite(taille), nElements(taille), elements(taille) {}
-	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(listeACopier.elements) {
-//		elements = (listeACopier.elements);
-//		for (int i = 0; i < listeACopier.nElements; i++) {
-//			elements.push_back(listeACopier.elements[i]);
-//		}
-	}
+	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(listeACopier.elements) {}
 };
 
 using ListeActeurs = Liste<Acteur>;
@@ -121,20 +115,8 @@ public:
 private:
 };
 
-/*
-struct Film
-{
-	Film();
-	std::string titre = "PasDeTitre", realisateur = "PasDeRealisateur"; // Titre et nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
-	int anneeSortie = 0, recette = 0; // Année de sortie et recette globale du film en millions de dollars
-	ListeActeurs acteurs;
-	Film(const Film& autreFilm);
-	Film& operator= (const Film& autreFilm);
 
-};
-*/
 struct Acteur
 {
 	std::string nom; int anneeNaissance; char sexe;
-	//ListeFilms joueDans;
 };
