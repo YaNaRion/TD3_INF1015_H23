@@ -66,8 +66,6 @@ protected:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
 	friend class ListeFilms;
-	friend class Film;
-	friend class Livre;
 	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
 };
 
@@ -122,6 +120,7 @@ class FilmLivre : public Film, public Livre {
 public:
 	FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre);
 	virtual void afficher() const;
+	friend ostream& operator<<(ostream&, FilmLivre&);
 private:
 };
 

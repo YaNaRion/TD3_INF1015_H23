@@ -247,7 +247,6 @@ vector<shared_ptr<Item>> creerBibliotheque(ListeFilms& listeFilm, vector<shared_
 	vector<shared_ptr<Item>> vecteur;
 	for (shared_ptr<Film> elem : listeFilm.avoirElements()) {
 		vecteur.push_back(elem);
-		cout << "ajout de " << elem << endl;
 	}
 	vecteur.insert(vecteur.end(), listeLivre.begin(), listeLivre.end());
 	return vecteur;
@@ -278,27 +277,22 @@ vector<shared_ptr<Livre>> lireLivre(const string& nomFichier) {
 				if (texte[j] == '\t' || texte[j] == '\0') {
 					if (compte == 0) {
 						livreTemp->modifierTitre(donneTemp);
-						//cout << "jai mis le titre\t";
 						compte++;
 					}
 					else if (compte == 1) {
 						livreTemp->modifierAnneeSortie(donneTemp);
-						//cout << "jai mis lanne\t";
 						compte++;
 					}
 					else if (compte == 2) {
 						livreTemp->modifierAuteur(donneTemp);
-						//cout << "jai mis lauteur\t";
 						compte++;
 					}
 					else if (compte == 3) {
 						livreTemp->modifierCopieVendues(donneTemp);
-						//cout << "jai mis les copies\t";
 						compte++;
 					}
 					else if (compte == 4) {
 						livreTemp->modifierNombreDePage(donneTemp);
-						//cout << "jai mis les pages\t";
 						compte++;
 					}
 					donneTemp = "";
@@ -308,7 +302,6 @@ vector<shared_ptr<Livre>> lireLivre(const string& nomFichier) {
 					donneTemp += texte[j];
 				}
 				if (compte == 5) {
-					cout << "tous va bien" << endl;
 					listeLivre.push_back(livreTemp);
 					break;
 				}
@@ -325,8 +318,6 @@ ostream& operator<<(ostream& o, const Acteur acteur) {
 
 //]
 ostream& operator<< (ostream& o, const Film& film) {
-//	o << "Titre: " << film.avoirTitre() << endl << "  Année :" << film.avoirAnneSortie() << endl;
-//	o << Item(film);
 	o << "  Réalisateur: " << film.avoirRealisateur()  << endl;
 	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
 
@@ -340,11 +331,11 @@ ostream& operator<< (ostream& o, const Film& film) {
 
 
 ostream& operator<<(ostream& os,Item& item) {
-	FilmLivre* a = dynamic_cast<FilmLivre*>(&item);
-	if (a != 0)
-		a->afficher();
-	else
 	item.afficher();
+	return os;
+}
+ostream& operator<<(ostream& os, FilmLivre& filmlivre) {
+	filmlivre.afficher();
 	return os;
 }
 
@@ -404,18 +395,27 @@ int main(){
 
 	string fichierLivre = "livres.txt";
 	vector<shared_ptr<Livre>> listeLivre= lireLivre(fichierLivre);
-//	cout << *listeLivre[0];
-	//cout << listeLivre[0]->avoirTitre();
 
-//	return 0;
 
 	ListeFilms listeFilms("films.bin");
 	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms, listeLivre);
-//	cout << *biblio[9];
+
+
+	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
+	
+	cout << ligneDeSeparation;
+
+	for (shared_ptr<Item> item : biblio) {
+		cout << *item;
+		cout << ligneDeSeparation;
+	}
+
+
+	cout << "CREATION D'UN FILM-LIVRE : " << endl;
 	FilmLivre hobbit(biblio[4], biblio[9]);
 	cout << hobbit;
-//	hobbit.afficher();
 
+	return 0;
 //	span<Film*> spanListeFilm = listeFilms.enSpan();
 //	cout << *spanListeFilm[0];
 //	afficherListeFilms(listeFilms);
@@ -425,7 +425,7 @@ int main(){
 
 	//int* fuite = new int; 
 /*
-	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
+
 
 	ListeFilms listeFilms("films.bin");
 
