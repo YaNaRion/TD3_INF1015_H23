@@ -113,6 +113,10 @@ private:
 
 };
 
+class FilmLivre : public Film, public Livre {
+	FilmLivre(Film& film, Livre& livre);
+};
+
 /*
 struct Film
 {

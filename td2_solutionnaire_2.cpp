@@ -242,13 +242,14 @@ Livre::Livre(string titree, int anneSortie, string auteure, int copiVendues, int
 }
 
 
-vector<shared_ptr<Item>> creerBibliotheque(ListeFilms& listeFilm) {
+vector<shared_ptr<Item>> creerBibliotheque(ListeFilms& listeFilm, vector<shared_ptr<Livre>>& listeLivre) {
 //	span<shared_ptr<Film>> spanListeFilm = ;
 	vector<shared_ptr<Item>> vecteur;
 	for (shared_ptr<Film> elem : listeFilm.avoirElements()) {
 		vecteur.push_back(elem);
 		cout << "ajout de " << elem << endl;
 	}
+	vecteur.insert(vecteur.end(), listeLivre.begin(), listeLivre.end());
 	return vecteur;
 }
 
@@ -365,7 +366,11 @@ void Livre::afficher() const {
 }
 
 
+FilmLivre::FilmLivre(Film& film, Livre& livre) {
+	modifierAnneeSortie(film.avoirAnneSortie());
 
+
+}
 
 
 int main(){
@@ -386,7 +391,7 @@ int main(){
 //	return 0;
 
 	ListeFilms listeFilms("films.bin");
-	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms);
+	vector<shared_ptr<Item>> biblio = creerBibliotheque(listeFilms, listeLivre);
 	cout << *biblio[0];
 
 //	span<Film*> spanListeFilm = listeFilms.enSpan();
