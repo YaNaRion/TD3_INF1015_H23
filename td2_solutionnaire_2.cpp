@@ -3,7 +3,6 @@
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 
 #include "structures_solutionnaire_2.hpp"      // Structures de données pour la collection de films en mémoire.
-
 #include "bibliotheque_cours.hpp"
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
 #include "memory"
@@ -56,7 +55,6 @@ void ListeFilms::changeDimension(int nouvelleCapacite){
 	nElements = min(nouvelleCapacite, nElements);
 	for (int i : range(nElements))
 		nouvelleListe[i] = elements[i];
-
 	elements = nouvelleListe;
 	capacite = nouvelleCapacite;
 }
@@ -104,7 +102,6 @@ shared_ptr<Acteur> lireActeur(istream& fichier, ListeFilms& listeFilms){
 		cout << "Création Acteur " << acteur.nom << endl;
 		return make_shared<Acteur>(acteur);
 	}
-
 }
 
 shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms){
@@ -131,7 +128,6 @@ ListeFilms::ListeFilms(const string& nomFichier) : possedeLesFilms_(true){
 	for ([[maybe_unused]] int i : range(nElement)) {
 		elements.push_back(lireFilm(fichier, *this));
 	}
-
 }
 
 void detruireActeur(shared_ptr<Acteur> acteur){
@@ -197,7 +193,7 @@ shared_ptr<Film> ListeFilms::rechercherCritere(const Critere critere) {
 	return nullptr;
 }
 
-template <class Element>
+template <typename Element>
 Liste<Element>::Liste() {
 	capacite = 0;
 	nElements = 0;
@@ -281,11 +277,11 @@ vector<shared_ptr<Livre>> lireLivre(const string& nomFichier) {
 				}
 			}
 		}
-		
 	}
 	else { cout << "probleme"; }
 	return listeLivre;
 }
+
 ostream& operator<<(ostream& o, const Acteur acteur) {
 	return o << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
 }
@@ -299,7 +295,6 @@ ostream& operator<< (ostream& o, const Film& film) {
 	for (const shared_ptr<Acteur>& acteur : film.avoirActeurs().elements) {
 		o << *acteur;
 	}
-
 	return o;
 }
 
@@ -384,11 +379,8 @@ int main(){
 		cout << ligneDeSeparation;
 	}
 
-
 	cout << "CREATION D'UN FILM-LIVRE : " << endl;
 	FilmLivre hobbit(biblio[4], biblio[9]);
 	cout << hobbit;
-
 	return 0;
-
 }

@@ -30,7 +30,7 @@ private:
 	bool possedeLesFilms_ = false; 
 };
 
-template <class Element>
+template <typename Element>
 class Liste {
 public:
 	int capacite;
@@ -43,7 +43,6 @@ public:
 
 using ListeActeurs = Liste<Acteur>;
 
-
 class Item {
 public:
 	const string avoirTitre() const { return titre; }
@@ -53,11 +52,13 @@ public:
 	void modifierAnneeSortie(int nouvAnneeSortie) { anneeSortie = nouvAnneeSortie; }
 	virtual void afficher() const;
 	friend ostream& operator<<(ostream&,Item&);
+	friend class ListeFilms;
+	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
+
 protected:
 	string titre = "PasDeTitre";
 	int anneeSortie = 0;
-	friend class ListeFilms;
-	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
+
 };
 
 class Film : virtual public Item {
@@ -65,7 +66,7 @@ public:
 	Film();
 	Film(const Film& autreFilm);
 	Film& operator= (const Film& autreFilm);
-	string avoirTitreNonConst() const{ return titre; }
+	//string avoirTitreNonConst() const{ return titre; }
 	string avoirTitre() { return titre; }
 	int avoirAnneSortieFilm() const { return anneeSortie; }
 	const string avoirRealisateur() const { return realisateur; }
@@ -118,5 +119,5 @@ private:
 
 struct Acteur
 {
-	std::string nom; int anneeNaissance; char sexe;
+	std::string nom = "Pas de nom"; int anneeNaissance = 0; char sexe = 'x';
 };
