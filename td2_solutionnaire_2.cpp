@@ -18,6 +18,8 @@
 #include "gsl/span"
 #include "debogage_memoire.hpp"        // Ajout des numéros de ligne des "new" dans le rapport de fuites.  Doit être après les include du système, qui peuvent utiliser des "placement new" (non supporté par notre ajout de numéros de lignes).
 #include <sstream>
+#include <forward_list>
+#include <list>
 using namespace iter;
 using namespace gsl;
 
@@ -141,7 +143,7 @@ void detruireFilm(Film* film){
 }
 
 
-
+/*
 void afficherListeFilms(const ListeFilms& listeFilms) {
 
 	static const string ligneDeSeparation =
@@ -156,8 +158,23 @@ void afficherListeFilms(const ListeFilms& listeFilms) {
 		cout << ligneDeSeparation;
 	}
 }
+*/
 
 
+template<typename T>
+void afficherListeFilms(const T& biblio) {
+	static const string ligneDeSeparation =
+		"\033[32m────────────────────────────────────────\033[0m\n";
+
+	cout << ligneDeSeparation;
+
+	for (const shared_ptr<Item> film : biblio) {
+
+		cout << *film;
+
+		cout << ligneDeSeparation;
+	}
+}
 
 
 Film::Film() {
@@ -351,6 +368,25 @@ FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
 	}
 }
 
+forward_list<shared_ptr<Item>> enForwardList(vector<shared_ptr<Item>>& liste) {
+	forward_list<shared_ptr<Item>> nouvListe;
+	auto it = nouvListe.before_begin();
+
+	for (unsigned int i = 0 ; i < liste.size() ; ++i) {
+		nouvListe.insert_after(it, liste[i]);
+		it++;
+	}
+	return nouvListe;
+}
+
+forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& liste) {
+	forward_list<shared_ptr<Item>> nouvListe;
+
+	for (unsigned int i = 0; i < liste.size(); ++i) {
+		nouvListe.push_front(liste[i]);
+	}
+	return nouvListe;
+}
 
 
 int main(){
@@ -359,7 +395,7 @@ int main(){
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 #endif
 	bibliotheque_cours::activerCouleursAnsi();
-
+	 
 
 
 	string fichierLivre = "livres.txt";
@@ -374,7 +410,21 @@ int main(){
 	
 	cout << ligneDeSeparation;
 
-	for (shared_ptr<Item> item : biblio) {
+	afficherListeFilms(biblio);
+
+	forward_list<shared_ptr<Item>> bilioEnListe = enForwardList(biblio);
+	forward_list<shared_ptr<Item>> bilioEnListeInverser = enForwardListInverser(biblio);
+
+	cout << "En forward liste" << '\n';
+	cout << ligneDeSeparation;
+
+
+	for (shared_ptr<Item> item : bilioEnListe) {
+		cout << *item;
+		cout << ligneDeSeparation;
+	}
+
+	for (shared_ptr<Item> item : bilioEnListeInverser) {
 		cout << *item;
 		cout << ligneDeSeparation;
 	}
@@ -383,4 +433,5 @@ int main(){
 	FilmLivre hobbit(biblio[4], biblio[9]);
 	cout << hobbit;
 	return 0;
+
 }
