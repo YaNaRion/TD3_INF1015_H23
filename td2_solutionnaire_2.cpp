@@ -388,6 +388,15 @@ forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& l
 	return nouvListe;
 }
 
+vector<shared_ptr<Item>> enVecteurInverse(vector<shared_ptr<Item>>& liste) {
+	vector<shared_ptr<Item>> vectorInverse;
+	size_t tailleListe = liste.size();
+	vectorInverse.reserve(tailleListe);
+	for (auto i : range(tailleListe)) {
+		vectorInverse[tailleListe - i] = liste[i];
+	}
+	return vectorInverse;
+}
 
 int main(){
 
