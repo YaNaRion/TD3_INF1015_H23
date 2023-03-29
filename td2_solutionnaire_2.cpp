@@ -368,7 +368,7 @@ FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
 	}
 }
 
-forward_list<shared_ptr<Item>> enForwardList(vector<shared_ptr<Item>>& liste) {
+forward_list<shared_ptr<Item>> enForwardList(vector<shared_ptr<Item>>& liste) { // 1.1
 	forward_list<shared_ptr<Item>> nouvListe;
 	auto it = nouvListe.before_begin();
 
@@ -379,7 +379,7 @@ forward_list<shared_ptr<Item>> enForwardList(vector<shared_ptr<Item>>& liste) {
 	return nouvListe;
 }
 
-forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& liste) {
+forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& liste) { // 1.2
 	forward_list<shared_ptr<Item>> nouvListe;
 
 	for (unsigned int i = 0; i < liste.size(); ++i) {
@@ -387,14 +387,46 @@ forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& l
 	}
 	return nouvListe;
 }
+/*
 
-vector<shared_ptr<Item>> enVecteurInverse(vector<shared_ptr<Item>>& liste) {
+
+
+forward_list<shared_ptr<Item>> forwardAForward(forward_list<shared_ptr<Item>>& liste) { // 1.3
+	forward_list<shared_ptr<Item>> nouvListe;
+	auto it = liste.begin();
+	auto itMax = liste.end();
+	auto iterateur2 = nouvListe.before_begin();
+	
+	while (it != itMax) {
+
+		nouvListe.insert_after(iterateur2, *it);
+		it++;
+		iterateur2++;
+		cout << **it << endl;
+	}
+//	cout << "on se rend au return " << endl;
+	return nouvListe;
+}
+
+*/
+
+
+vector<shared_ptr<Item>> enVecteurInverse(forward_list<shared_ptr<Item>>& liste) { // 1.4 Ordre : O(2*n)
 	vector<shared_ptr<Item>> vectorInverse;
-	size_t tailleListe = liste.size();
+	size_t tailleListe = 0;
+	auto it = liste.begin();
+	
+	while (*it != nullptr) {
+		tailleListe++;
+		it++;
+	}
+	it = liste.begin();
 	vectorInverse.reserve(tailleListe);
 	for (auto i : range(tailleListe)) {
-		vectorInverse[tailleListe - i] = liste[i];
+		vectorInverse[tailleListe - i] = *it;
+		it++;
 	}
+	
 	return vectorInverse;
 }
 
@@ -423,6 +455,7 @@ int main(){
 
 	forward_list<shared_ptr<Item>> bilioEnListe = enForwardList(biblio);
 	forward_list<shared_ptr<Item>> bilioEnListeInverser = enForwardListInverser(biblio);
+//	forward_list<shared_ptr<Item>> biblioEnForwardEnForward = forwardAForward(bilioEnListe);
 
 	cout << "En forward liste" << '\n';
 	cout << ligneDeSeparation;
