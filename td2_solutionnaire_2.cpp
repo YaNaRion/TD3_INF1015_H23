@@ -306,12 +306,12 @@ ostream& operator<<(ostream& o, const Acteur acteur) {
 
 ostream& operator<< (ostream& o, const Film& film) {
 	o << "  Réalisateur: " << film.avoirRealisateur()  << endl;
-	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
+//	o << "  Recette: " << film.avoirRecette() << "M$" << endl;
 
-	o << "Acteurs:" << endl;
-	for (const shared_ptr<Acteur>& acteur : film.avoirActeurs().elements) {
-		o << *acteur;
-	}
+//	o << "Acteurs:" << endl;
+//	for (const shared_ptr<Acteur>& acteur : film.avoirActeurs().elements) {
+//		o << *acteur;
+//	}
 	return o;
 }
 
@@ -326,29 +326,27 @@ ostream& operator<<(ostream& os, FilmLivre& filmlivre) {
 }
 
 void Item::afficher() const{
-	cout << "Titre: " << titre << endl << "Annee de sortie: " << anneeSortie << endl;
+	cout << "Titre: " << titre << endl;// << "Annee de sortie: " << anneeSortie << endl;
 }
 
 void Film::afficher() const {
 	Item::afficher();
-	cout << "  Réalisateur: " << realisateur << endl
-	 << "  Recette: " << recette << "M$" << endl;
+	cout << "  Réalisateur: " << realisateur << endl;//	 << "  Recette: " << recette << "M$" << endl;
 
-	cout << "Acteurs: " << endl;
-	for (const shared_ptr<Acteur>& acteur : acteurs.elements) {
-		cout << *acteur;
-	}
+//	cout << "Acteurs: " << endl;
+//	for (const shared_ptr<Acteur>& acteur : acteurs.elements) {
+//		cout << *acteur;
+//	}
 }
 
 void Livre::afficher() const {
 	Item::afficher();
-	cout << "Auteur: " << auteur << endl
-		<< "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
+	cout << "Auteur: " << auteur << endl;//<< "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
 }
 
 void FilmLivre::afficher() const {
 	Film::afficher();
-	cout << "Auteur: " << auteur << endl << "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
+	cout << "Auteur: " << auteur << endl;// << "Nombre de pages: " << nombreDePage << "  Copies Vendues: " << copieVendues << endl;
 }
 
 FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
@@ -368,66 +366,64 @@ FilmLivre::FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre) {
 	}
 }
 
-forward_list<shared_ptr<Item>> enForwardList(vector<shared_ptr<Item>>& liste) { // 1.1
-	forward_list<shared_ptr<Item>> nouvListe;
+forward_list<Item*> enForwardList(vector<shared_ptr<Item>>& liste) { // 1.1
+	forward_list<Item*> nouvListe;
 	auto it = nouvListe.before_begin();
 
 	for (unsigned int i = 0 ; i < liste.size() ; ++i) {
-		nouvListe.insert_after(it, liste[i]);
+		nouvListe.insert_after(it, &*liste[i]);
 		it++;
 	}
 	return nouvListe;
 }
 
-forward_list<shared_ptr<Item>> enForwardListInverser(vector<shared_ptr<Item>>& liste) { // 1.2
-	forward_list<shared_ptr<Item>> nouvListe;
-
-	for (unsigned int i = 0; i < liste.size(); ++i) {
-		nouvListe.push_front(liste[i]);
+forward_list<Item*> enForwardListInverser(forward_list<Item*>& liste) { // 1.2
+	forward_list<Item*> nouvListe;
+	for (Item* elem : liste) {
+		nouvListe.push_front(elem);
 	}
 	return nouvListe;
 }
-/*
 
 
 
-forward_list<shared_ptr<Item>> forwardAForward(forward_list<shared_ptr<Item>>& liste) { // 1.3
-	forward_list<shared_ptr<Item>> nouvListe;
-	auto it = liste.begin();
-	auto itMax = liste.end();
-	auto iterateur2 = nouvListe.before_begin();
+forward_list<Item*> forwardAForward(forward_list<Item*>& liste) { // 1.3
+	forward_list<Item*> nouvListe;
+	auto iterateur = nouvListe.before_begin();
 	
-	while (it != itMax) {
-
-		nouvListe.insert_after(iterateur2, *it);
-		it++;
-		iterateur2++;
-		cout << **it << endl;
+	for (Item* elem : liste) {
+		nouvListe.insert_after(iterateur, elem);
+		iterateur++;
 	}
-//	cout << "on se rend au return " << endl;
+
 	return nouvListe;
 }
 
-*/
 
 
-vector<shared_ptr<Item>> enVecteurInverse(forward_list<shared_ptr<Item>>& liste) { // 1.4 Ordre : O(2*n)
-	vector<shared_ptr<Item>> vectorInverse;
+
+vector<Item*> enVecteurInverse(forward_list<Item*>& liste) { // 1.4 
+	vector<Item*> vecteurInverse;
 	size_t tailleListe = 0;
 	auto it = liste.begin();
 	
-	while (*it != nullptr) {
-		tailleListe++;
-		it++;
-	}
-	it = liste.begin();
-	vectorInverse.reserve(tailleListe);
-	for (auto i : range(tailleListe)) {
-		vectorInverse[tailleListe - i] = *it;
-		it++;
-	}
 	
-	return vectorInverse;
+	for (Item* item : liste) {
+		tailleListe++;
+	}
+	vecteurInverse.reserve(tailleListe);
+
+
+	auto itVect = vecteurInverse.begin();
+
+	for (auto i : range(tailleListe)) {
+		vecteurInverse.push_back(*it);
+		cout << *itVect;
+		itVect++;
+		vecteurInverse.insert(itVect,*it);
+
+	}
+	return vecteurInverse;
 }
 
 int main(){
@@ -453,23 +449,39 @@ int main(){
 
 	afficherListeFilms(biblio);
 
-	forward_list<shared_ptr<Item>> bilioEnListe = enForwardList(biblio);
-	forward_list<shared_ptr<Item>> bilioEnListeInverser = enForwardListInverser(biblio);
-//	forward_list<shared_ptr<Item>> biblioEnForwardEnForward = forwardAForward(bilioEnListe);
+	forward_list<Item*> biblioEnListe = enForwardList(biblio);
+	forward_list<Item*> biblioEnListeInverser = enForwardListInverser(biblioEnListe);
+	forward_list<Item*> biblioEnForwardEnForward = forwardAForward(biblioEnListe);
+	vector<Item*> nouveauVecteur = enVecteurInverse(biblioEnListe);
 
+	cout << endl << endl << endl;
 	cout << "En forward liste" << '\n';
-	cout << ligneDeSeparation;
 
+	for (Item* item : biblioEnListe) {
+		cout << *item;
+		cout << ligneDeSeparation;
+	}
+	cout << endl << endl << endl;
 
-	for (shared_ptr<Item> item : bilioEnListe) {
+	cout << "EN FORWARD INVERSE" << endl;
+	for (Item* item : biblioEnListeInverser) {
+		cout << *item;
+		cout << ligneDeSeparation;
+	}
+	cout << endl << endl << endl;
+	cout << " FORWARD FORWARD PLEASE" << endl;
+	for (Item* item : biblioEnForwardEnForward) {
 		cout << *item;
 		cout << ligneDeSeparation;
 	}
 
-	for (shared_ptr<Item> item : bilioEnListeInverser) {
+	cout << ligneDeSeparation << endl;;
+	cout << " FORWARD A VECTEUR INVERSE" << endl;
+	for (Item* item : nouveauVecteur) {
 		cout << *item;
 		cout << ligneDeSeparation;
 	}
+
 
 	cout << "CREATION D'UN FILM-LIVRE : " << endl;
 	FilmLivre hobbit(biblio[4], biblio[9]);
