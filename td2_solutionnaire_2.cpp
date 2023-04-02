@@ -20,6 +20,7 @@
 #include <sstream>
 #include <forward_list>
 #include <list>
+#include <map>
 using namespace iter;
 using namespace gsl;
 
@@ -402,29 +403,59 @@ forward_list<Item*> forwardAForward(forward_list<Item*>& liste) { // 1.3
 
 
 
-vector<Item*> enVecteurInverse(forward_list<Item*>& liste) { // 1.4 
+vector<Item*> enVecteurInverse(forward_list<Item*> liste) { // 1.4 passage par copie afin de pouvoir optimiser après sans
+
 	vector<Item*> vecteurInverse;
 	size_t tailleListe = 0;
-	auto it = liste.begin();
-	
-	
+
+
 	for (Item* item : liste) {
 		tailleListe++;
 	}
-	vecteurInverse.reserve(tailleListe);
 
-
-	auto itVect = vecteurInverse.begin();
+	vecteurInverse.resize(tailleListe);
+	//fill(vecteurInverse.begin(), vecteurInverse.end(), nullptr);
+	
+	//auto itVect = vecteurInverse.rbegin();
+	//itVect++;
 
 	for (auto i : range(tailleListe)) {
-		vecteurInverse.push_back(*it);
-		cout << *itVect;
-		itVect++;
-		vecteurInverse.insert(itVect,*it);
+		//auto itVect = vecteurInverse.rbegin();
+		//itVect += i+1;
+		auto it = liste.begin();
+		vecteurInverse[tailleListe - i - 1] = *it;
+		//vecteurInverse.insert(itVect.base(), *it);
+		liste.pop_front();
 
 	}
 	return vecteurInverse;
 }
+
+template <typename Element>
+shared_ptr<Element> Liste<Element>::begin() {
+	return elements[0];
+}
+
+template <typename Element>
+shared_ptr<Element> Liste<Element>::end() {
+	return elements[nElements - 1];
+}
+
+/*
+template <typename Element>
+shared_ptr<Element> begin();
+template <typename Element>
+shared_ptr<Element> end();
+*/
+
+map<string, Item*> enOrdre(vector<Item*>& liste) { //2.1
+	map<string, Item*> biblioEnMap;
+	for (Item* item : liste) {
+		biblioEnMap.insert(make_pair(item->avoirTitre(), item));
+	}
+	return biblioEnMap;
+}
+
 
 int main(){
 
@@ -453,8 +484,17 @@ int main(){
 	forward_list<Item*> biblioEnListeInverser = enForwardListInverser(biblioEnListe);
 	forward_list<Item*> biblioEnForwardEnForward = forwardAForward(biblioEnListe);
 	vector<Item*> nouveauVecteur = enVecteurInverse(biblioEnListe);
+	map<string, Item*> biblioEnMap = enOrdre(nouveauVecteur);
 
-	cout << endl << endl << endl;
+	cout << ligneDeSeparation;
+	cout << "1.5 Affichage" << "\n";
+	shared_ptr<Film> alien = listeFilms.avoirElements()[0];
+	for (auto acteur : alien->avoirActeursNonConst().elements) { //cest bizarre, genre ca fonctionne mais pas sur que cest ce qu'on doit faire mais cest vraiment chiant si faut faire "alien->avoirActeursNonConst()"
+		cout << *acteur << "\n";
+	}
+	
+	cout << ligneDeSeparation;
+
 	cout << "En forward liste" << '\n';
 
 	for (Item* item : biblioEnListe) {
@@ -482,10 +522,18 @@ int main(){
 		cout << ligneDeSeparation;
 	}
 
+	cout << " Afficher The Hobbit en O(1)" << endl;
+	cout << *biblioEnMap["The Hobbit"];
 
+	cout << ligneDeSeparation << endl;
+
+
+
+	/* On s'en fou pour ce tp 
 	cout << "CREATION D'UN FILM-LIVRE : " << endl;
 	FilmLivre hobbit(biblio[4], biblio[9]);
 	cout << hobbit;
 	return 0;
+	*/
 
 }

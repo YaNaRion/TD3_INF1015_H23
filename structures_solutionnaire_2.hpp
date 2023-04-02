@@ -10,6 +10,8 @@ using gsl::span;
 using namespace std;
 
 class Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
+template <typename Element>
+class Liste;
 
 class ListeFilms {
 public:
@@ -23,6 +25,7 @@ public:
 	shared_ptr<Film> rechercherCritere(const Critere critere);
 	vector <shared_ptr<Film>> avoirElements() { return elements; }
 	vector <shared_ptr<Film>> avoirElementsConst() const { return elements; }
+
 private:
 	void changeDimension(int nouvelleCapacite);
 	int capacite = 0, nElements = 0;
@@ -39,6 +42,9 @@ public:
 	Liste();
 	Liste(int taille) : capacite(taille), nElements(taille), elements(taille) {}
 	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(listeACopier.elements) {}
+	shared_ptr<Element> begin();
+	shared_ptr<Element> end();
+	
 };
 
 using ListeActeurs = Liste<Acteur>;
@@ -80,6 +86,13 @@ public:
 	friend shared_ptr<Film> lireFilm(istream& fichier, ListeFilms& listeFilms);
 	virtual void afficher() const;
 
+	/*
+	template <typename Element>
+	shared_ptr<Liste<Acteur>> begin();
+	template <typename Element>
+	shared_ptr<Liste<Acteur>> end();
+	*/
+
 protected:
 	string realisateur = "PasDeRealisateur";
 	int recette = 0;
@@ -108,12 +121,12 @@ protected:
 
 };
 
+
 class FilmLivre : public Film, public Livre {
 public:
 	FilmLivre(shared_ptr<Item> film, shared_ptr<Item> livre);
 	virtual void afficher() const;
 	friend ostream& operator<<(ostream&, FilmLivre&);
-private:
 };
 
 
