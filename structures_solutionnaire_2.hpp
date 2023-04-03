@@ -92,10 +92,10 @@ public:
 	template <typename Element>
 	shared_ptr<Liste<Acteur>> end();
 	*/
-
+	int recette = 0;
 protected:
 	string realisateur = "PasDeRealisateur";
-	int recette = 0;
+
 	ListeActeurs acteurs;
 };
 

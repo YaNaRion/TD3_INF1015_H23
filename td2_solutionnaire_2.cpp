@@ -21,6 +21,7 @@
 #include <forward_list>
 #include <list>
 #include <map>
+#include <numeric>
 using namespace iter;
 using namespace gsl;
 
@@ -332,7 +333,8 @@ void Item::afficher() const{
 
 void Film::afficher() const {
 	Item::afficher();
-	cout << "  Réalisateur: " << realisateur << endl;//	 << "  Recette: " << recette << "M$" << endl;
+	cout << "  Réalisateur: " << realisateur << endl;
+//	cout << " RECETTE (A ENLEVER)" << recette << endl;//	 << "  Recette: " << recette << "M$" << endl;
 
 //	cout << "Acteurs: " << endl;
 //	for (const shared_ptr<Acteur>& acteur : acteurs.elements) {
@@ -527,10 +529,20 @@ int main(){
 
 	cout << ligneDeSeparation << endl;
 
+	vector<Item*> vecteur3point1(7);
+	copy_if(biblioEnListe.begin(), biblioEnListe.end(), vecteur3point1.begin(), [](Item* item) {return bool(dynamic_cast<Film*>(&*item)); });
 
+	cout << "copie 3.1" << endl;
+	for (auto&& elem : vecteur3point1) {
+		cout << *elem;
+		cout << ligneDeSeparation;
+	}
+	
+	int somme = accumulate(vecteur3point1.begin(), vecteur3point1.end(), 0, [&](int actuel, auto it) {return actuel + dynamic_cast<Film*>(&*it)->recette; });
+	cout << "SOMME DES RECETTES: " << somme << endl;
 
 	/* On s'en fou pour ce tp 
-	cout << "CREATION D'UN FILM-LIVRE : " << endl;
+	cout << "CREATION D'UN FILM-LIVRE : " << endl
 	FilmLivre hobbit(biblio[4], biblio[9]);
 	cout << hobbit;
 	return 0;
