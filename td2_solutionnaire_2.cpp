@@ -433,15 +433,6 @@ vector<Item*> enVecteurInverse(forward_list<Item*> liste) { // 1.4 passage par c
 	return vecteurInverse;
 }
 
-template <typename Element>
-shared_ptr<Element> Liste<Element>::begin() {
-	return elements[0];
-}
-
-template <typename Element>
-shared_ptr<Element> Liste<Element>::end() {
-	return elements[nElements - 1];
-}
 
 /*
 template <typename Element>
@@ -488,13 +479,7 @@ int main(){
 	vector<Item*> nouveauVecteur = enVecteurInverse(biblioEnListe);
 	map<string, Item*> biblioEnMap = enOrdre(nouveauVecteur);
 
-	cout << ligneDeSeparation;
-	cout << "1.5 Affichage" << "\n";
-	shared_ptr<Film> alien = listeFilms.avoirElements()[0];
-	for (auto acteur : alien->avoirActeursNonConst().elements) { //cest bizarre, genre ca fonctionne mais pas sur que cest ce qu'on doit faire mais cest vraiment chiant si faut faire "alien->avoirActeursNonConst()"
-		cout << *acteur << "\n";
-	}
-	
+
 	cout << ligneDeSeparation;
 
 	cout << "En forward liste" << '\n';
@@ -522,6 +507,15 @@ int main(){
 	for (Item* item : nouveauVecteur) {
 		cout << *item;
 		cout << ligneDeSeparation;
+	}
+
+
+
+	cout << ligneDeSeparation;
+	cout << "1.5 Affichage" << "\n";
+	Film alien = dynamic_cast<Film&>(*biblio[0]);
+	for (auto&& acteur : alien.avoirActeursNonConst()) { //cest bizarre, genre ca fonctionne mais pas sur que cest ce qu'on doit faire mais cest vraiment chiant si faut faire "alien->avoirActeursNonConst()"
+		cout << *acteur << "\n";
 	}
 
 	cout << " Afficher The Hobbit en O(1)" << endl;

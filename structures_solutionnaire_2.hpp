@@ -42,8 +42,8 @@ public:
 	Liste();
 	Liste(int taille) : capacite(taille), nElements(taille), elements(taille) {}
 	Liste(const Liste<Element>& listeACopier) : capacite(listeACopier.capacite), nElements(listeACopier.nElements), elements(listeACopier.elements) {}
-	shared_ptr<Element> begin();
-	shared_ptr<Element> end();
+	vector<shared_ptr<Element>>::iterator begin() { return elements.begin(); };
+	vector<shared_ptr<Element>>::iterator end() { return elements.end(); };
 	
 };
 
